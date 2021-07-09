@@ -5,5 +5,10 @@ public abstract class Subject {
     public void attach(Observer observer){
         this.observer = observer;
     }
-    abstract void notifyChange(int i, int j, boolean val);
+    public void notifyChange(int i, int j, boolean val){
+        observer.update(i, j, val);
+    };
+    public void notifyEnd(){
+        observer.updateEnd();
+    };
 }
