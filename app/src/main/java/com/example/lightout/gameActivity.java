@@ -21,7 +21,7 @@ public class gameActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle outState)
     {
         //---save whatever you need to persist—
-        outState.("ID", "1234567890");
+        outState("ID", "1234567890");
         super.onSaveInstanceState(outState);
     }
 
