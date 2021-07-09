@@ -1,27 +1,37 @@
 package com.example.lightout;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.lightout.logic.Board;
 
-public class gameActivity extends AppCompatActivity {
-    private Board board;
-    public static final String boardExtraKey = "board_key";
+import java.io.Serializable;
+
+public class GameActivity extends AppCompatActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_layout);
 
-        board = savedInstanceState.getSerializableExtra(boardExtraKey);
+        Board board = (Board) getIntent().getSerializableExtra(BoardFragment.boardBundleKey);
+        Log.i("lightout-GameActivity", "board size: " + board.getSize());
+
+        Fragment frag = BoardFragment.newInstance(board);
+        FragmentTransaction tran = getSupportFragmentManager().beginTransaction();
+        tran.replace(R.id.fragment_container_game_board, frag);
+        tran.addToBackStack(null);
+        tran.commit();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState)
     {
         //---save whatever you need to persist—
-        outState("ID", "1234567890");
         super.onSaveInstanceState(outState);
     }
 
@@ -30,6 +40,5 @@ public class gameActivity extends AppCompatActivity {
     {
         super.onRestoreInstanceState(savedInstanceState);
         //---retrieve the information persisted earlier---
-        String ID = savedInstanceState.getString("ID");
     }
 }

@@ -1,9 +1,16 @@
 package com.example.lightout.logic;
 
-public class Board extends Subject{
-    boolean state[][];  //pivoted matrix
-    int size;
-    int lightedNum;
+import java.io.Serializable;
+
+public class Board extends Subject implements Serializable {
+    private boolean state[][];  //pivoted matrix
+    public boolean[][] getBoard(){return state;}
+    private int size;
+    public int getSize(){
+        return size;
+    }
+
+    private int lightedNum;
 
     public Board(int size){
         this.size = size;
