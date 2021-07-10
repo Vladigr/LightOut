@@ -5,6 +5,7 @@ import java.io.Serializable;
 public class Board extends Subject implements Serializable {
     private boolean state[][];  //pivoted matrix
     public boolean[][] getBoard(){return state;}
+    public boolean getElementInBoard(int i, int j){return state[i][j];}
     private int size;
     public int getSize(){
         return size;
