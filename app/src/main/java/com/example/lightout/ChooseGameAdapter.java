@@ -6,17 +6,41 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.lightout.data.CareTakerSave;
+import com.example.lightout.data.SavedGame;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+
 
 public class ChooseGameAdapter extends RecyclerView.Adapter<ChooseGameAdapter.ViewHolder>{
-    private String[] stubArray;
+    private String[] fileName;
+    private GameActivity.StarGame listener;
 
-    public ChooseGameAdapter( String[] stubArray) {
-        this.stubArray=  stubArray;
+    public ChooseGameAdapter(Context context) {
+        updateFileNameArr(context);
+        try{
+            this.listener = (GameActivity.StarGame)context;
+        }catch(ClassCastException e){
+            throw new ClassCastException("the class " +
+                    context.getClass().getName() +
+                    " must implements the interface 'FragAListener'");
+        }
+    }
+
+    public void updateFileNameArr(Context context){
+        ArrayList<String> fileNameList = new ArrayList<>();
+        File[] fileList = context.getFilesDir().listFiles();
+        for( File file : fileList){
+            fileNameList.add(file.getName());
+        }
+        fileName = new String[fileNameList.size()];
+        this.fileName = fileNameList.toArray(fileName);
     }
 
 
@@ -41,7 +65,7 @@ public class ChooseGameAdapter extends RecyclerView.Adapter<ChooseGameAdapter.Vi
 
     @Override
     public int getItemCount() {
-        return stubArray.length;
+        return fileName.length;
     }
 
 
@@ -67,11 +91,19 @@ public class ChooseGameAdapter extends RecyclerView.Adapter<ChooseGameAdapter.Vi
 
         public void bindData(int position){
             txtIndexRow.setText(""+position);
-            txtDataOfGame.setText("Info: "+stubArray[position]);
+            txtDataOfGame.setText("Info: "+ fileName[position]);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.i("elro",stubArray[position]);
+                    try {
+                        SavedGame sg = (new CareTakerSave()).getSave(v.getContext(), fileName[position]);
+                        listener.startGame(sg);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ClassNotFoundException e) {
+                        throw new RuntimeException(e.getMessage());
+                    }
+                    Log.i("elro", fileName[position]);
                 }
             });
 

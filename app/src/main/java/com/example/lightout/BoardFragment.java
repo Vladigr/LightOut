@@ -52,7 +52,9 @@ public class BoardFragment extends Fragment implements Observer {
 
     @Override
     public void onDestroy(){
-        listener.onDestroy(board);
+        if(board.checkWin() == false){
+            listener.onDestroy(board);
+        }
         super.onDestroy();
     }
 

@@ -8,9 +8,12 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.lightout.data.SavedGame;
 import com.example.lightout.logic.Board;
 
-public class MainActivity extends AppCompatActivity implements FragmentListener, NewGameSetup.StarGame {
+public class MainActivity extends AppCompatActivity implements FragmentListener, GameActivity.StarGame {
+
+
 
     private ConstraintLayout fragContainer;
     @Override
@@ -59,9 +62,9 @@ public class MainActivity extends AppCompatActivity implements FragmentListener,
 
 
     @Override
-    public void startGame(int size, boolean timer, boolean random) {
+    public void startGame(SavedGame sg) {
         Intent intent = new Intent(this,GameActivity.class);
-        intent.putExtra(BoardFragment.boardBundleKey, new Board(size));
+        intent.putExtra(BoardFragment.boardBundleKey,sg.getBoard());
         startActivity(intent);
     }
 }

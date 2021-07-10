@@ -21,6 +21,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class GameActivity extends AppCompatActivity implements TimerBroadcastReceiver.ListenForTimer ,BoardFragment.BoardListener{
+
+    public interface StarGame{ //interface for starting the game via the main activity
+        public void startGame(SavedGame sg);
+    }
     //our broadcastRecevier
     private  TimerBroadcastReceiver myTimeReceive =null;
     //handler for counting down a second
@@ -150,7 +154,8 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         SavedGame sg = new SavedGame(board, myTimeReceive.getSeconds());
         //Todo: change to general case
         try {
-            ct.SaveData(this, sg, "save.dat");
+            int num = this.getFilesDir().listFiles().length;
+            ct.SaveData(this, sg, Integer.toString(num)+".dat");
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }

@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 public class ChoosingGameFragment extends Fragment  implements View.OnClickListener{
     private FragmentListener listener;
     private ChooseGameAdapter myGameAdapter;
-    private String[] stubArray={"game1","game2","game3","game4","game5"};
     @Override
     public void onAttach(@NonNull Context context) {
         try{
@@ -35,13 +34,14 @@ public class ChoosingGameFragment extends Fragment  implements View.OnClickListe
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        myGameAdapter = new ChooseGameAdapter(stubArray);
+        myGameAdapter = new ChooseGameAdapter(getActivity());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        myGameAdapter.updateFileNameArr(getActivity());
         return inflater.inflate(R.layout.choosing_game, container, false);
     }
 
