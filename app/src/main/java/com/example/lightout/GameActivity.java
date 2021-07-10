@@ -8,12 +8,13 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.lightout.logic.Board;
 
 import java.io.Serializable;
 
-public class GameActivity extends AppCompatActivity {
+public class GameActivity extends AppCompatActivity implements BoardFragment.WinListener {
     private TextView txtTimeLeft;
 
     @Override
@@ -67,5 +68,11 @@ public class GameActivity extends AppCompatActivity {
     {
         super.onRestoreInstanceState(savedInstanceState);
         //---retrieve the information persisted earlier---
+    }
+
+    @Override
+    public void won() {
+        Log.i("GameActivity.won", "won ran");
+        Toast.makeText(this, "won", Toast.LENGTH_SHORT).show();
     }
 }

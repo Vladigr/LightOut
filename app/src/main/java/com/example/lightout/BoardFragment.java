@@ -1,8 +1,11 @@
 package com.example.lightout;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +29,24 @@ public class BoardFragment extends Fragment implements Observer {
 
     private Board board;
     public static final String boardBundleKey = "board_key";
+    private WinListener listener;
+
+    public interface WinListener {
+        void won();
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+
+        try{
+            this.listener = (WinListener) context;
+        }catch(ClassCastException e){
+            throw new ClassCastException("the class " +
+                    context.getClass().getName() +
+                    " must implements the interface 'WinListener'");
+        }
+        super.onAttach(context);
+    }
 
     public BoardFragment() {
         // Required empty public constructor
@@ -48,13 +69,15 @@ public class BoardFragment extends Fragment implements Observer {
         return fragment;
     }
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             board = (Board) getArguments().getSerializable(boardBundleKey);
             board.attach(this);
-            Log.i("lightout-GameActivity", "board size: " + board.getSize());
+            Log.i("BoardFragment.onCreate", "board size: " + board.getSize() + " board state[0][0]: " + board.getElementInBoard(0,0));
         }
     }
 
@@ -85,6 +108,7 @@ public class BoardFragment extends Fragment implements Observer {
         //set Starting color
         int dpAsPixels =  dpAsPixels(10);
         setColorForTableButton(i, j);
+
         btn.setOnClickListener(
                 new View.OnClickListener(){
                     @Override
@@ -93,19 +117,15 @@ public class BoardFragment extends Fragment implements Observer {
                         board.makeMove(tbtn.getI(), tbtn.getJ());
                     }
                 });
-        TableLayout.LayoutParams lp = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT);
-        /*
-        lp.bottomMargin = lp.topMargin =  lp.leftMargin = lp.rightMargin = dpAsPixels;*/
-
         tr.addView(btn);
     }
 
     private void setColorForTableButton(int i, int j) {
         TableButton btn = btnArr[i][j];
         if(board.getElementInBoard(i,j) == true){
-            btn.setBackgroundResource(R.color.on);
+            btn.setBackgroundResource(R.drawable.on);
         }else{
-            btn.setBackgroundResource(R.color.off);
+            btn.setBackgroundResource(R.drawable.off);
         }
     }
 
@@ -118,10 +138,15 @@ public class BoardFragment extends Fragment implements Observer {
     public void update(int i, int j, boolean val) {
         btnArr[i][j].setState(val);
         setColorForTableButton(i, j);
+        Log.i("BoardFragment.update" ,"i,j,val: "+i +","+j +","+val);
     }
 
     @Override
     public void updateEnd() {
-
+        Log.i("BoardFragment.updateEnd" ,"gameStatus: "+board.checkWin());
+        if(board.checkWin()){
+            listener.won();
+            getActivity().getSupportFragmentManager().popBackStack();
+        }
     }
 }

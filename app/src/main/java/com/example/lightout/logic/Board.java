@@ -1,11 +1,14 @@
 package com.example.lightout.logic;
 
+import android.util.Log;
+
 import java.io.Serializable;
+import java.util.Arrays;
 
 public class Board extends Subject implements Serializable {
     private boolean state[][];  //pivoted matrix
     public boolean[][] getBoard(){return state;}
-    public boolean getElementInBoard(int i, int j){return state[i][j];}
+    public Boolean getElementInBoard(int iScreen, int jScreen){return state[iScreen+1][jScreen+1];}
     private int size;
     public int getSize(){
         return size;
@@ -16,7 +19,15 @@ public class Board extends Subject implements Serializable {
     public Board(int size){
         this.size = size;
         state = new boolean[size+2][size+2];
-        lightedNum = size^2;
+        for(int i=0; i < state.length; ++i){
+            for(int j=0; j < state.length; ++j){
+                state[i][j] = true;
+            }
+        }
+        Log.i("Board.Board", "board state[0][0]: "+state[0][0]);
+        lightedNum = (int) Math.pow(size,2);
+        Log.i("Board.Board", "lightedNum: "+lightedNum);
+
     }
 
     public Board(boolean state[][]){
@@ -36,23 +47,27 @@ public class Board extends Subject implements Serializable {
     }
 
     private void UpdateElementInMatrix(int i, int j){
-        state[i][j] = !state[i][j];
-        if (state[i][j]){
-            ++lightedNum;
-        }else{
-            --lightedNum;
+        if(i > 0 && i < size + 1 && j > 0 && j < size + 1 ){
+            state[i][j] = !state[i][j];
+            if (state[i][j]){
+                ++lightedNum;
+            }else{
+                --lightedNum;
+            }
+            notifyChange(i-1, j-1, state[i][j]); //in screen cord
         }
-        notifyChange(i-1, j-1, state[i][j]); //in screen cord
     }
 
     public void makeMove(int iScreen, int jScreen){
         int i = iScreen + 1;
         int j = jScreen + 1;
-        UpdateElementInMatrix(i,j);
-        UpdateElementInMatrix(i+1,j);
+
+        UpdateElementInMatrix(i-1,j);
         UpdateElementInMatrix(i,j-1);
-        UpdateElementInMatrix(i+1,j);
+        UpdateElementInMatrix(i,j);
         UpdateElementInMatrix(i,j+1);
+        UpdateElementInMatrix(i+1,j);
+        Log.i("Board.makeMove", "lightedNum: "+lightedNum);
         notifyEnd();
     }
 }
