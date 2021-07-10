@@ -4,56 +4,108 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.lightout.logic.Board;
 
 import java.io.Serializable;
+import java.util.Timer;
+import java.util.TimerTask;
 
-public class GameActivity extends AppCompatActivity {
+public class GameActivity extends AppCompatActivity implements TimerBroadcastReceiver.ListenForTimer {
+    private static TimerBroadcastReceiver myTimer=null;
+    final Handler handler = new Handler();
+    Timer timer = new Timer(false);
     private TextView txtTimeLeft;
+    private Thread thread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_layout);
+        txtTimeLeft=(TextView) findViewById(R.id.txtTimeLeft);
+
+        Log.i("elro","Game Create");
+
+        //creating a time that will tick every 1 second
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        //Log.i("elro","passed 5 sec");
+                        Intent intent=new Intent("com.example.lightout.TICK");
+                        sendBroadcast(intent);
+                    }
+                });
+            }
+        };
+        timer.scheduleAtFixedRate(timerTask, 1000, 1000); // every 1 seconds.
+
+        //creating a timer reciver for 90 seconds
+        myTimer=new TimerBroadcastReceiver(90,this);
+
+
+        //adding the filter action for the reciver
+        IntentFilter filter = new IntentFilter("com.example.lightout.TICK");
+        registerReceiver(myTimer,filter);
+        myTimer.setResume();
+
+
 
         Board board = (Board) getIntent().getSerializableExtra(BoardFragment.boardBundleKey);
         Log.i("lightout-GameActivity", "board size: " + board.getSize());
-
         Fragment frag = BoardFragment.newInstance(board);
         FragmentTransaction tran = getSupportFragmentManager().beginTransaction();
         tran.replace(R.id.fragment_container_game_board, frag);
         tran.addToBackStack(null);
-        txtTimeLeft=(TextView) findViewById(R.id.txtTimeLeft);
-
-        new CountDownTimer(65000, 1000) {
-            public void onTick(long millisUntilFinished) {
-                txtTimeLeft.setText(getTimeLeft(millisUntilFinished));
-            }
-            public void onFinish() {
-                txtTimeLeft.setText("done!");
-            }
-        }.start();
-
         tran.commit();
+
+
+
     }
 
-    private String getTimeLeft(long millisUntilFinished){
-        long minutes=millisUntilFinished/60000;
-        long seconds;
-        String strSeconds;
-        String strMinutes;
-        if(minutes==0)
-             seconds=millisUntilFinished/1000;
-        else
-            seconds=(millisUntilFinished-minutes*60000)/1000;
-
-        return ""+minutes+" : "+seconds;
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i("elro","Game Resume");
+        if(myTimer!=null)
+        {
+            myTimer.setResume();
+        }
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i("elro","Game Pause");
+        if(myTimer!=null)
+        {
+            myTimer.setPause();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i("elro","Game Destroy");
+        if(myTimer!=null)
+        {
+            unregisterReceiver(myTimer);
+        }
+    }
+
 
     @Override
     public void onSaveInstanceState(Bundle outState)
@@ -67,5 +119,16 @@ public class GameActivity extends AppCompatActivity {
     {
         super.onRestoreInstanceState(savedInstanceState);
         //---retrieve the information persisted earlier---
+    }
+
+
+    @Override
+    public void timerEnded() {
+        //do stuff here
+    }
+
+    @Override
+    public void getTime(String time) {
+        this.txtTimeLeft.setText(time);
     }
 }
