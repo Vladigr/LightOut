@@ -6,28 +6,29 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
+//a broadcastReceiver for the timer of the game, every tick will be recived and the timer will go
+//down by 1 for every second
 public class TimerBroadcastReceiver extends BroadcastReceiver {
+    //the seconds left for the end of the game
     private long timeLeftInSeconds;
+    //a flag for detrming pausing the count or not
     private boolean pause;
+    //the acrivity that will use this broadcastReceiver
     private ListenForTimer listener;
+
     TimerBroadcastReceiver(long timeLeftInSeconds,ListenForTimer listener)
     {
         this.timeLeftInSeconds =timeLeftInSeconds;
         this.listener=listener;
         pause=false;
     }
-    public void setResume(){
-        pause=false;
-    }
-    public void setPause(){
-        pause=true;
-    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
-        if(intent.getAction().compareTo("com.example.lightout.TICK")==0){
+        //check if the intnet is the action of tick every one second
+        if(intent.getAction().compareTo("com.example.lightout.TICK")==0){//our custom broadcast action
             if(pause==false)
             {
-                //Toast.makeText(context,"tick",Toast.LENGTH_SHORT).show();
                 if(timeLeftInSeconds !=-1)
                 {
                     Log.i("elro","Got the tick, "+ timeLeftInSeconds);
@@ -36,15 +37,22 @@ public class TimerBroadcastReceiver extends BroadcastReceiver {
                 }
 
             }
-            else
-                Toast.makeText(context,"paused",Toast.LENGTH_SHORT).show();
+           // else
+                //Toast.makeText(context,"paused",Toast.LENGTH_SHORT).show();
         }
 
     }
+    public void setResume(){
+        pause=false;
+    }
+    public void setPause(){
+        pause=true;
+    }
+    //return how many seconds left ot the game
     private long getSeconds(){
         return this.timeLeftInSeconds;
     }
-
+    //get how much time left
     private void getTimeLeft(){
         long minutes= timeLeftInSeconds /60;
         long seconds;
@@ -57,9 +65,11 @@ public class TimerBroadcastReceiver extends BroadcastReceiver {
         if(minutes==0 && seconds==0)
             listener.timerEnded();
     }
-
+    //an interface that the activity must implement to use such broadcast
     public interface ListenForTimer{
+        //when the time ended
         public void timerEnded();
+        //get the current time that is left in: "minutes : seconds"
         public void getTime(String time);
     }
 
