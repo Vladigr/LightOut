@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void startGameDemo(){
         Intent intent = new Intent(this,GameActivity.class);
-        intent.putExtra(BoardFragment.boardBundleKey, new Board(3));
+        intent.putExtra(BoardFragment.boardBundleKey, new Board(4));
         startActivity(intent);
     }
 }
