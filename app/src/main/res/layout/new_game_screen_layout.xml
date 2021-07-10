@@ -7,14 +7,27 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="338dp"
-        android:layout_height="649dp"
+        android:layout_width="340dp"
+        android:layout_height="524dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.405">
+
+        <CheckBox
+            android:id="@+id/cboxTimerMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Timer Mode" />
+
+        <CheckBox
+            android:id="@+id/cboxRandomMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Random Board" />
 
         <TextView
             android:id="@+id/textView2"
@@ -22,7 +35,9 @@
             android:layout_height="wrap_content"
             android:text="Board Size:"
             android:textColor="@color/black"
-            android:textSize="22sp" />
+            android:textSize="22sp"
+            tools:layout_editor_absoluteX="35dp"
+            tools:layout_editor_absoluteY="103dp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -67,69 +82,6 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Timer Mode:"
-            android:textColor="@color/black"
-            android:textSize="22sp" />
-
-        <RadioGroup
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/rbtnYesTimerMode"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Yes" />
-
-            <Space
-                android:layout_width="18dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <RadioButton
-                android:id="@+id/rbtnNoTimerMode"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="No" />
-        </RadioGroup>
-
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Random Board:"
-            android:textColor="@color/black"
-            android:textSize="22sp" />
-
-        <RadioGroup
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/rbtnYesRandomMode"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Yes" />
-
-            <Space
-                android:layout_width="18dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <RadioButton
-                android:id="@+id/rbtnNoRandomMode"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="No" />
-        </RadioGroup>
-
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

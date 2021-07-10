@@ -10,7 +10,7 @@ import android.os.Bundle;
 
 import com.example.lightout.logic.Board;
 
-public class MainActivity extends AppCompatActivity implements FragmentListener{
+public class MainActivity extends AppCompatActivity implements FragmentListener, NewGameSetup.StarGame {
 
     private ConstraintLayout fragContainer;
     @Override
@@ -58,5 +58,10 @@ public class MainActivity extends AppCompatActivity implements FragmentListener{
     }
 
 
-
+    @Override
+    public void startGame(int size, boolean timer, boolean random) {
+        Intent intent = new Intent(this,GameActivity.class);
+        intent.putExtra(BoardFragment.boardBundleKey, new Board(size));
+        startActivity(intent);
+    }
 }
