@@ -21,19 +21,21 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class GameActivity extends AppCompatActivity implements TimerBroadcastReceiver.ListenForTimer ,BoardFragment.BoardListener{
+    //our broadcastRecevier
     private  TimerBroadcastReceiver myTimeReceive =null;
+    //handler for counting down a second
     final Handler handler = new Handler();
+    //a timer for the cound down
     Timer timer = new Timer(false);
+
     private TextView txtTimeLeft;
-    private Thread thread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_layout);
-        txtTimeLeft=(TextView) findViewById(R.id.txtTimeLeft);
-
         Log.i("elro","Game Create");
+        txtTimeLeft=(TextView) findViewById(R.id.txtTimeLeft);
 
         //creating a time that will tick every 1 second
         TimerTask timerTask = new TimerTask() {
@@ -49,7 +51,8 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
                 });
             }
         };
-        timer.scheduleAtFixedRate(timerTask, 1000, 1000); // every 1 seconds.
+        // every 1 seconds.
+        timer.scheduleAtFixedRate(timerTask, 1000, 1000);
 
         //creating a timer reciver for 90 seconds
         myTimeReceive =new TimerBroadcastReceiver(90,this);
@@ -69,9 +72,6 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         FragmentTransaction tran = getSupportFragmentManager().beginTransaction();
         tran.replace(R.id.fragment_container_game_board, frag);
         tran.addToBackStack(null);
-
-
-
         tran.commit();
     }
 
@@ -80,6 +80,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
     protected void onResume() {
         super.onResume();
         Log.i("elro","Game Resume");
+        //if there is a broadcast set it to resume
         if(myTimeReceive !=null)
         {
             myTimeReceive.setResume();
@@ -90,6 +91,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
     protected void onPause() {
         super.onPause();
         Log.i("elro","Game Pause");
+        //if there is a broadcast pause the countdown
         if(myTimeReceive !=null)
         {
             myTimeReceive.setPause();
@@ -100,10 +102,13 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
     protected void onDestroy() {
         super.onDestroy();
         Log.i("elro","Game Destroy");
+        //if there is a broadcastRecevier unregister it
         if(myTimeReceive !=null)
         {
             unregisterReceiver(myTimeReceive);
         }
+        timer.cancel();
+
     }
 
 

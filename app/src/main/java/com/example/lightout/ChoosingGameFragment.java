@@ -5,6 +5,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,8 @@ import android.view.ViewGroup;
 //choosing which game the player wants, saved or new
 public class ChoosingGameFragment extends Fragment  implements View.OnClickListener{
     private FragmentListener listener;
+    private ChooseGameAdapter myGameAdapter;
+    private String[] stubArray={"game1","game2","game3","game4","game5"};
     @Override
     public void onAttach(@NonNull Context context) {
         try{
@@ -29,7 +33,9 @@ public class ChoosingGameFragment extends Fragment  implements View.OnClickListe
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+        myGameAdapter = new ChooseGameAdapter(stubArray);
     }
 
     @Override
@@ -42,7 +48,12 @@ public class ChoosingGameFragment extends Fragment  implements View.OnClickListe
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         view.findViewById(R.id.btnCreateNewGame).setOnClickListener(this);
-        super.onViewCreated(view, savedInstanceState);
+        RecyclerView rcvGameList = (RecyclerView) view.findViewById(R.id.rcvGameList);
+        rcvGameList.setAdapter(myGameAdapter);
+        rcvGameList.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+
+        //super.onViewCreated(view, savedInstanceState);
     }
 
     @Override

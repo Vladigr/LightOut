@@ -19,6 +19,7 @@
             android:text="Create new game" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcvGameList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:backgroundTint="@color/background" />
