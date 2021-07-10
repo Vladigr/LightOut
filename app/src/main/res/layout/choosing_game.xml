@@ -12,10 +12,10 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/btnCreateNewGame"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/menuButton"
+            android:backgroundTint="@color/menuButton"
             android:text="Create new game" />
 
         <androidx.recyclerview.widget.RecyclerView

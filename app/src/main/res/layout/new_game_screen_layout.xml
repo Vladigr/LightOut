@@ -6,52 +6,130 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginBottom="100dp"
+    <LinearLayout
+        android:layout_width="338dp"
+        android:layout_height="649dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <TableRow
+        <TextView
+            android:id="@+id/textView2"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:text="Board Size:"
+            android:textColor="@color/black"
+            android:textSize="22sp" />
 
-            <TextView
-                android:id="@+id/textView2"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn3on3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Board size: " />
+                android:layout_weight="1"
+                android:backgroundTint="@color/formButton"
+                android:text="3 x 3"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
-        </TableRow>
+            <Space
+                android:layout_width="18dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5" />
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/textView3"
+            <Button
+                android:id="@+id/btn4on4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Timer mode: " />
-        </TableRow>
+                android:layout_weight="1"
+                android:backgroundTint="@color/formButton"
+                android:text="4 x 4"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            <Space
+                android:layout_width="18dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
 
-            <TextView
-                android:id="@+id/textView4"
+            <Button
+                android:id="@+id/btn5on5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Random board: " />
-        </TableRow>
+                android:layout_weight="1"
+                android:backgroundTint="@color/formButton"
+                android:text="5 x 5"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        </LinearLayout>
 
-    </TableLayout>
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Timer Mode:"
+            android:textColor="@color/black"
+            android:textSize="22sp" />
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rbtnYesTimerMode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Yes" />
+
+            <Space
+                android:layout_width="18dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <RadioButton
+                android:id="@+id/rbtnNoTimerMode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="No" />
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Random Board:"
+            android:textColor="@color/black"
+            android:textSize="22sp" />
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rbtnYesRandomMode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Yes" />
+
+            <Space
+                android:layout_width="18dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <RadioButton
+                android:id="@+id/rbtnNoRandomMode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="No" />
+        </RadioGroup>
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
