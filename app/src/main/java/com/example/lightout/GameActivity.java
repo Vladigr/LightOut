@@ -67,32 +67,12 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         FragmentTransaction tran = getSupportFragmentManager().beginTransaction();
         tran.replace(R.id.fragment_container_game_board, frag);
         tran.addToBackStack(null);
-        txtTimeLeft=(TextView) findViewById(R.id.txtTimeLeft);
 
-        new CountDownTimer(65000, 1000) {
-            public void onTick(long millisUntilFinished) {
-                txtTimeLeft.setText(getTimeLeft(millisUntilFinished));
-            }
-            public void onFinish() {
-                txtTimeLeft.setText("done!");
-            }
-        }.start();
+
 
         tran.commit();
     }
 
-    private String getTimeLeft(long millisUntilFinished){
-        long minutes=millisUntilFinished/60000;
-        long seconds;
-        String strSeconds;
-        String strMinutes;
-        if(minutes==0)
-             seconds=millisUntilFinished/1000;
-        else
-            seconds=(millisUntilFinished-minutes*60000)/1000;
-
-
-    }
 
     @Override
     protected void onResume() {
