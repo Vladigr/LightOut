@@ -11,6 +11,7 @@
     <color name="text">#e5e9f0</color>
     <color name="off">#2e3440</color>
     <color name="on">#ebcb8b</color>
+    <color name="stroke">#eceff4</color>
     <color name="menuButton">#81a1c1</color>
     <color name="formButton">#5e81ac</color>
 </resources>

@@ -10,13 +10,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.lightout.data.CareTakerSave;
 import com.example.lightout.logic.Board;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class GameActivity extends AppCompatActivity implements TimerBroadcastReceiver.ListenForTimer {
+public class GameActivity extends AppCompatActivity implements TimerBroadcastReceiver.ListenForTimer ,BoardFragment.BoardListener{
     private  TimerBroadcastReceiver myTimeReceive =null;
     final Handler handler = new Handler();
     Timer timer = new Timer(false);
@@ -60,12 +62,34 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
 
         Board board = (Board) getIntent().getSerializableExtra(BoardFragment.boardBundleKey);
         Log.i("lightout-GameActivity", "board size: " + board.getSize());
+
         Fragment frag = BoardFragment.newInstance(board);
         FragmentTransaction tran = getSupportFragmentManager().beginTransaction();
         tran.replace(R.id.fragment_container_game_board, frag);
         tran.addToBackStack(null);
-        tran.commit();
+        txtTimeLeft=(TextView) findViewById(R.id.txtTimeLeft);
 
+        new CountDownTimer(65000, 1000) {
+            public void onTick(long millisUntilFinished) {
+                txtTimeLeft.setText(getTimeLeft(millisUntilFinished));
+            }
+            public void onFinish() {
+                txtTimeLeft.setText("done!");
+            }
+        }.start();
+
+        tran.commit();
+    }
+
+    private String getTimeLeft(long millisUntilFinished){
+        long minutes=millisUntilFinished/60000;
+        long seconds;
+        String strSeconds;
+        String strMinutes;
+        if(minutes==0)
+             seconds=millisUntilFinished/1000;
+        else
+            seconds=(millisUntilFinished-minutes*60000)/1000;
 
 
     }
@@ -124,5 +148,17 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
     @Override
     public void getTime(String time) {
         this.txtTimeLeft.setText(time);
+    }
+
+    @Override
+    public void won() {
+        Log.i("GameActivity.won", "won ran");
+        Toast.makeText(this, "won", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDestroy(Board board) {
+        CareTakerSave ct = new CareTakerSave();
+        //ct.SaveData();
     }
 }
