@@ -10,11 +10,10 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.lightout.data.CareTakerSave;
 import com.example.lightout.logic.Board;
 
-import java.io.Serializable;
-
-public class GameActivity extends AppCompatActivity implements BoardFragment.WinListener {
+public class GameActivity extends AppCompatActivity implements BoardFragment.BoardListener {
     private TextView txtTimeLeft;
 
     @Override
@@ -74,5 +73,11 @@ public class GameActivity extends AppCompatActivity implements BoardFragment.Win
     public void won() {
         Log.i("GameActivity.won", "won ran");
         Toast.makeText(this, "won", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDestroy(Board board) {
+        CareTakerSave ct = new CareTakerSave();
+        //ct.SaveData();
     }
 }

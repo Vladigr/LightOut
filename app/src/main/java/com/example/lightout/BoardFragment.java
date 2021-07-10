@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,23 +28,30 @@ public class BoardFragment extends Fragment implements Observer {
 
     private Board board;
     public static final String boardBundleKey = "board_key";
-    private WinListener listener;
+    private BoardListener listener;
 
-    public interface WinListener {
+    public interface BoardListener {
         void won();
+        void onDestroy(Board board);
     }
 
     @Override
     public void onAttach(@NonNull Context context) {
 
         try{
-            this.listener = (WinListener) context;
+            this.listener = (BoardListener) context;
         }catch(ClassCastException e){
             throw new ClassCastException("the class " +
                     context.getClass().getName() +
                     " must implements the interface 'WinListener'");
         }
         super.onAttach(context);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        listener.onDestroy(board);
     }
 
     public BoardFragment() {
