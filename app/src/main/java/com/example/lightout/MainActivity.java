@@ -13,6 +13,8 @@ import com.example.lightout.logic.Board;
 public class MainActivity extends AppCompatActivity implements FragmentListener, NewGameSetup.StarGame {
 
     private ConstraintLayout fragContainer;
+    public static final String timerKey="TimerStatusKey";
+    public static final String randomKey="RandomStatusKey";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements FragmentListener,
     public void startGame(int size, boolean timer, boolean random) {
         Intent intent = new Intent(this,GameActivity.class);
         intent.putExtra(BoardFragment.boardBundleKey, new Board(size));
+        intent.putExtra(MainActivity.timerKey,timer);
+        intent.putExtra(MainActivity.randomKey,random);
         startActivity(intent);
     }
 }

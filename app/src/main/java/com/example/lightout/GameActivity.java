@@ -37,31 +37,39 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         Log.i("elro","Game Create");
         txtTimeLeft=(TextView) findViewById(R.id.txtTimeLeft);
 
-        //creating a time that will tick every 1 second
-        TimerTask timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        //Log.i("elro","passed 5 sec");
-                        Intent intent=new Intent("com.example.lightout.TICK");
-                        sendBroadcast(intent);
-                    }
-                });
-            }
-        };
-        // every 1 seconds.
-        timer.scheduleAtFixedRate(timerTask, 1000, 1000);
+        boolean timerStatus = (boolean) getIntent().getSerializableExtra(MainActivity.timerKey);
+        boolean randomStatus = (boolean) getIntent().getSerializableExtra(MainActivity.randomKey);
 
-        //creating a timer reciver for 90 seconds
-        myTimeReceive =new TimerBroadcastReceiver(90,this);
+        if(timerStatus==false)
+        {
+            txtTimeLeft.setText("infinity");
+        }
+        else{
+            //creating a time that will tick every 1 second
+            TimerTask timerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            //Log.i("elro","passed 5 sec");
+                            Intent intent=new Intent("com.example.lightout.TICK");
+                            sendBroadcast(intent);
+                        }
+                    });
+                }
+            };
+            // every 1 seconds.
+            timer.scheduleAtFixedRate(timerTask, 1000, 1000);
 
+            //creating a timer reciver for 90 seconds
+            myTimeReceive =new TimerBroadcastReceiver(90,this);
+            //adding the filter action for the reciver
+            IntentFilter filter = new IntentFilter("com.example.lightout.TICK");
+            registerReceiver(myTimeReceive,filter);
+            myTimeReceive.setResume();
+        }
 
-        //adding the filter action for the reciver
-        IntentFilter filter = new IntentFilter("com.example.lightout.TICK");
-        registerReceiver(myTimeReceive,filter);
-        myTimeReceive.setResume();
 
 
 
@@ -130,6 +138,8 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
     @Override
     public void timerEnded() {
         //do stuff here
+        Toast.makeText(this, "lost", Toast.LENGTH_SHORT).show();
+        timer.cancel();
     }
 
     @Override
@@ -141,18 +151,23 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
     public void won() {
         Log.i("GameActivity.won", "won ran");
         Toast.makeText(this, "won", Toast.LENGTH_SHORT).show();
+        timer.cancel();
     }
 
     @Override
     public void onDestroy(Board board) {
         CareTakerSave ct = new CareTakerSave();
         Log.i("GameActictivity.onDestroy", String.valueOf(getFilesDir()));
-        SavedGame sg = new SavedGame(board, myTimeReceive.getSeconds());
-        //Todo: change to general case
-        try {
-            ct.SaveData(this, sg, "save.dat");
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
+        if(myTimeReceive!=null)
+        {
+            SavedGame sg = new SavedGame(board, myTimeReceive.getSeconds());
+            //Todo: change to general case
+            try {
+                ct.SaveData(this, sg, "save.dat");
+            } catch (IOException e) {
+                throw new RuntimeException(e.getMessage());
+            }
         }
+
     }
 }
