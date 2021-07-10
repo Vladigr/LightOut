@@ -41,7 +41,8 @@ public class TimerBroadcastReceiver extends BroadcastReceiver {
         }
 
     }
-    private long getSeconds(){
+    //TODO: was private change to public ask Elroyee
+    public long getSeconds(){
         return this.timeLeftInSeconds;
     }
 

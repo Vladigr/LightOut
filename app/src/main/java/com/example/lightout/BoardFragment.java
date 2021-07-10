@@ -17,6 +17,8 @@ import com.example.lightout.boundary.TableButton;
 import com.example.lightout.logic.Board;
 import com.example.lightout.logic.Observer;
 
+import java.io.IOException;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link BoardFragment#newInstance} factory method to
@@ -49,9 +51,9 @@ public class BoardFragment extends Fragment implements Observer {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroy(){
         listener.onDestroy(board);
+        super.onDestroy();
     }
 
     public BoardFragment() {

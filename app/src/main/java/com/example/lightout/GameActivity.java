@@ -13,8 +13,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.lightout.data.CareTakerSave;
+import com.example.lightout.data.SavedGame;
 import com.example.lightout.logic.Board;
 
+import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -139,6 +141,13 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
     @Override
     public void onDestroy(Board board) {
         CareTakerSave ct = new CareTakerSave();
-        //ct.SaveData();
+        Log.i("GameActictivity.onDestroy", String.valueOf(getFilesDir()));
+        SavedGame sg = new SavedGame(board, myTimeReceive.getSeconds());
+        //Todo: change to general case
+        try {
+            ct.SaveData(this, sg, "save.dat");
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 }
