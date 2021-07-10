@@ -84,8 +84,6 @@ public class BoardFragment extends Fragment implements Observer {
         TableButton btn = btnArr[i][j];
         //set Starting color
         int dpAsPixels =  dpAsPixels(10);
-        btn.setMinWidth(dpAsPixels);
-        btn.setMinHeight(dpAsPixels);
         setColorForTableButton(i, j);
         btn.setOnClickListener(
                 new View.OnClickListener(){
