@@ -4,26 +4,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.Manifest;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.lightout.logic.Board;
 
-import java.io.Serializable;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class GameActivity extends AppCompatActivity implements TimerBroadcastReceiver.ListenForTimer {
-    private static TimerBroadcastReceiver myTimer=null;
+    private  TimerBroadcastReceiver myTimeReceive =null;
     final Handler handler = new Handler();
     Timer timer = new Timer(false);
     private TextView txtTimeLeft;
@@ -54,13 +48,13 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         timer.scheduleAtFixedRate(timerTask, 1000, 1000); // every 1 seconds.
 
         //creating a timer reciver for 90 seconds
-        myTimer=new TimerBroadcastReceiver(90,this);
+        myTimeReceive =new TimerBroadcastReceiver(90,this);
 
 
         //adding the filter action for the reciver
         IntentFilter filter = new IntentFilter("com.example.lightout.TICK");
-        registerReceiver(myTimer,filter);
-        myTimer.setResume();
+        registerReceiver(myTimeReceive,filter);
+        myTimeReceive.setResume();
 
 
 
@@ -80,9 +74,9 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
     protected void onResume() {
         super.onResume();
         Log.i("elro","Game Resume");
-        if(myTimer!=null)
+        if(myTimeReceive !=null)
         {
-            myTimer.setResume();
+            myTimeReceive.setResume();
         }
     }
 
@@ -90,9 +84,9 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
     protected void onPause() {
         super.onPause();
         Log.i("elro","Game Pause");
-        if(myTimer!=null)
+        if(myTimeReceive !=null)
         {
-            myTimer.setPause();
+            myTimeReceive.setPause();
         }
     }
 
@@ -100,9 +94,9 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
     protected void onDestroy() {
         super.onDestroy();
         Log.i("elro","Game Destroy");
-        if(myTimer!=null)
+        if(myTimeReceive !=null)
         {
-            unregisterReceiver(myTimer);
+            unregisterReceiver(myTimeReceive);
         }
     }
 
