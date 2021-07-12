@@ -4,4 +4,10 @@
     <item
         android:id="@+id/solve"
         android:title="Solve" />
+    <item
+        android:id="@+id/btnRestart"
+        android:title="Restart" />
+    <item
+        android:id="@+id/btnExit"
+        android:title="Exit" />
 </menu>

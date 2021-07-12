@@ -1,5 +1,6 @@
 package com.example.lightout;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
@@ -7,13 +8,18 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.lightout.data.SavedGame;
 import com.example.lightout.logic.Board;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity implements FragmentListener, GameActivity.StarGame {
-
-
 
     private ConstraintLayout fragContainer;
     public static final String timerKey="TimerStatusKey";
@@ -73,4 +79,23 @@ public class MainActivity extends AppCompatActivity implements FragmentListener,
         intent.putExtra(MainActivity.secondsKey,sg.getSecond());
         startActivity(intent);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        this.getMenuInflater().inflate(R.menu.main_activity_menu,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.btnExitFromApp:
+                finish();
+                System.exit(0);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
 }
