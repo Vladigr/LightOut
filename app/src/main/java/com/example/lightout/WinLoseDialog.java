@@ -26,11 +26,7 @@ public class WinLoseDialog extends DialogFragment {
         this.gameInterface=gameInterface;
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        gameInterface.endGame();
-    }
+
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {

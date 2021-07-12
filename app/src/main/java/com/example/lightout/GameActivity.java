@@ -114,7 +114,9 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
              timer.cancel();
         CareTakerSave ct = new CareTakerSave();
         Log.i("GameActictivity.onDestroy", String.valueOf(getFilesDir()));
-        SavedGame sg = new SavedGame(board, myTimeReceive.getSeconds());
+        SavedGame sg=null;
+        if(myTimeReceive!=null)
+            sg = new SavedGame(board, myTimeReceive.getSeconds());
         //Todo: change to general case
         try {
             int num = this.getFilesDir().listFiles().length;
@@ -161,7 +163,8 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         timer.scheduleAtFixedRate(timerTask, 1000, 1000);
 
         //creating a timer reciver for 90 seconds
-        myTimeReceive =new TimerBroadcastReceiver(seconds,this);
+        //myTimeReceive =new TimerBroadcastReceiver(seconds,this);
+        myTimeReceive =new TimerBroadcastReceiver(5,this);
         //adding the filter action for the reciver
         IntentFilter filter = new IntentFilter("com.example.lightout.TICK");
         registerReceiver(myTimeReceive,filter);
@@ -220,10 +223,10 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
     public void restartGame() {
         Log.i("elro","game restarts");
 
-        Board board = new Board(originalBoard);
-        Log.i("lightout-GameActivity", "board size: " + board.getSize());
+        Board newBoard = new Board(originalBoard);
+        Log.i("lightout-GameActivity", "board size: " + newBoard.getSize());
 
-        Fragment frag = BoardFragment.newInstance(originalBoard);
+        Fragment frag = BoardFragment.newInstance(newBoard);
         FragmentTransaction tran = getSupportFragmentManager().beginTransaction();
         tran.replace(R.id.fragment_container_game_board, frag);
         tran.addToBackStack(null);
