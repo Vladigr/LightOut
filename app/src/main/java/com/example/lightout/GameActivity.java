@@ -2,6 +2,7 @@ package com.example.lightout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
@@ -20,13 +21,15 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class GameActivity extends AppCompatActivity implements TimerBroadcastReceiver.ListenForTimer ,BoardFragment.BoardListener{
+public class GameActivity extends AppCompatActivity implements TimerBroadcastReceiver.ListenForTimer ,BoardFragment.BoardListener,GameInterface{
     //our broadcastRecevier
     private  TimerBroadcastReceiver myTimeReceive =null;
+    //the original board
+    Board originalBoard;
     //handler for counting down a second
     final Handler handler = new Handler();
     //a timer for the cound down
-    Timer timer = new Timer(false);
+    Timer timer;
 
     private TextView txtTimeLeft;
 
@@ -42,38 +45,14 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
 
         if(timerStatus==false)
         {
-            txtTimeLeft.setText("infinity");
+            txtTimeLeft.setText("--:--");
         }
         else{
-            //creating a time that will tick every 1 second
-            TimerTask timerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            //Log.i("elro","passed 5 sec");
-                            Intent intent=new Intent("com.example.lightout.TICK");
-                            sendBroadcast(intent);
-                        }
-                    });
-                }
-            };
-            // every 1 seconds.
-            timer.scheduleAtFixedRate(timerTask, 1000, 1000);
-
-            //creating a timer reciver for 90 seconds
-            myTimeReceive =new TimerBroadcastReceiver(90,this);
-            //adding the filter action for the reciver
-            IntentFilter filter = new IntentFilter("com.example.lightout.TICK");
-            registerReceiver(myTimeReceive,filter);
-            myTimeReceive.setResume();
+            startTimer();
         }
 
-
-
-
         Board board = (Board) getIntent().getSerializableExtra(BoardFragment.boardBundleKey);
+        originalBoard= new Board(board);
         Log.i("lightout-GameActivity", "board size: " + board.getSize());
 
         Fragment frag = BoardFragment.newInstance(board);
@@ -115,7 +94,8 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         {
             unregisterReceiver(myTimeReceive);
         }
-        timer.cancel();
+        if(timer!=null)
+             timer.cancel();
 
     }
 
@@ -134,12 +114,45 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         //---retrieve the information persisted earlier---
     }
 
+    private void startTimer(){
+        //creating a time that will tick every 1 second
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        //Log.i("elro","passed 5 sec");
+                        Intent intent=new Intent("com.example.lightout.TICK");
+                        sendBroadcast(intent);
+                    }
+                });
+            }
+        };
+        // every 1 seconds.
+        timer = new Timer(false);
+        timer.scheduleAtFixedRate(timerTask, 1000, 1000);
+
+
+        //creating a timer reciver for 90 seconds
+        myTimeReceive =new TimerBroadcastReceiver(5,this);
+        //adding the filter action for the reciver
+        IntentFilter filter = new IntentFilter("com.example.lightout.TICK");
+        registerReceiver(myTimeReceive,filter);
+        myTimeReceive.setResume();
+
+    }
+
 
     @Override
     public void timerEnded() {
         //do stuff here
         Toast.makeText(this, "lost", Toast.LENGTH_SHORT).show();
         timer.cancel();
+        FragmentManager fm = getSupportFragmentManager();
+        WinLoseDialog alertDialog = WinLoseDialog.newInstance("Defeat");
+        alertDialog.connectGameInterface(this);
+        alertDialog.show(fm, "fragment_alert");
     }
 
     @Override
@@ -151,7 +164,12 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
     public void won() {
         Log.i("GameActivity.won", "won ran");
         Toast.makeText(this, "won", Toast.LENGTH_SHORT).show();
-        timer.cancel();
+        if(timer!=null)
+            timer.cancel();
+        FragmentManager fm = getSupportFragmentManager();
+        WinLoseDialog alertDialog = WinLoseDialog.newInstance("You Are Victorious");
+        alertDialog.connectGameInterface(this);
+        alertDialog.show(fm, "fragment_alert");
     }
 
     @Override
@@ -169,5 +187,29 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
             }
         }
 
+    }
+
+    @Override
+    public void restartGame() {
+        Log.i("elro","game restarts");
+
+        Board board = new Board(originalBoard);
+        Log.i("lightout-GameActivity", "board size: " + board.getSize());
+
+        Fragment frag = BoardFragment.newInstance(originalBoard);
+        FragmentTransaction tran = getSupportFragmentManager().beginTransaction();
+        tran.replace(R.id.fragment_container_game_board, frag);
+        tran.addToBackStack(null);
+        tran.commit();
+        startTimer();
+
+    }
+
+    @Override
+    public void endGame() {
+        Log.i("elro","game ended");
+        this.getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        Intent intent = new Intent(this,MainActivity.class);
+        startActivity(intent);
     }
 }

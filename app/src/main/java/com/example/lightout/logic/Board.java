@@ -42,6 +42,31 @@ public class Board extends Subject implements Serializable {
         }
     }
 
+    //duplicate the board
+    public Board(Board newBoard){
+        this.size = newBoard.size;
+        state = new boolean[size+2][size+2];
+        for(int i=0; i < state.length; ++i){
+            for(int j=0; j < state.length; ++j){
+                state[i][j] = true;
+            }
+        }
+        Log.i("Board.Board", "board state[0][0]: "+state[0][0]);
+        lightedNum = (int) Math.pow(size,2);
+        Log.i("Board.Board", "lightedNum: "+lightedNum);
+
+        this.state = newBoard.state;
+        size = newBoard.state.length - 2;
+        int iterSize = size + 1;
+        lightedNum = 0;
+        for(int i =1; i < iterSize; ++i){
+            for(int j =1; j < iterSize; ++j){
+                if(state[i][j] == true) ++lightedNum;
+            }
+        }
+
+    }
+
     public boolean checkWin(){
         return lightedNum == 0;
     }
