@@ -26,7 +26,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class GameActivity extends AppCompatActivity implements TimerBroadcastReceiver.ListenForTimer ,BoardFragment.BoardListener,GameInterface{
-public class GameActivity extends AppCompatActivity implements TimerBroadcastReceiver.ListenForTimer ,BoardFragment.BoardListener{
 
     public interface StarGame{ //interface for starting the game via the main activity
         public void startGame(SavedGame sg);
@@ -40,6 +39,8 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
     final Handler handler = new Handler();
     //a timer for the cound down
     Timer timer;
+    Board board;
+    long secondsLeft;
 
 
     private TextView txtTimeLeft;
@@ -59,10 +60,10 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
             txtTimeLeft.setText("--:--");
         }
         else{
-            startTimer();
+            startTimer(secondsLeft=(long) getIntent().getSerializableExtra(MainActivity.secondsKey));
         }
 
-        Board board = (Board) getIntent().getSerializableExtra(BoardFragment.boardBundleKey);
+        board = (Board) getIntent().getSerializableExtra(BoardFragment.boardBundleKey);
         originalBoard= new Board(board);
         Log.i("lightout-GameActivity", "board size: " + board.getSize());
 
@@ -111,8 +112,19 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         }
         if(timer!=null)
              timer.cancel();
+        CareTakerSave ct = new CareTakerSave();
+        Log.i("GameActictivity.onDestroy", String.valueOf(getFilesDir()));
+        SavedGame sg = new SavedGame(board, myTimeReceive.getSeconds());
+        //Todo: change to general case
+        try {
+            int num = this.getFilesDir().listFiles().length;
+            ct.SaveData(this, sg, Integer.toString(num)+".dat");
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
 
     }
+
 
 
     @Override
@@ -129,7 +141,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         //---retrieve the information persisted earlier---
     }
 
-    private void startTimer(){
+    private void startTimer(long seconds){
         //creating a time that will tick every 1 second
         TimerTask timerTask = new TimerTask() {
             @Override
@@ -148,9 +160,8 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         timer = new Timer(false);
         timer.scheduleAtFixedRate(timerTask, 1000, 1000);
 
-
         //creating a timer reciver for 90 seconds
-        myTimeReceive =new TimerBroadcastReceiver(5,this);
+        myTimeReceive =new TimerBroadcastReceiver(seconds,this);
         //adding the filter action for the reciver
         IntentFilter filter = new IntentFilter("com.example.lightout.TICK");
         registerReceiver(myTimeReceive,filter);
@@ -217,8 +228,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         tran.replace(R.id.fragment_container_game_board, frag);
         tran.addToBackStack(null);
         tran.commit();
-        startTimer();
-
+        startTimer(secondsLeft);
     }
 
     @Override

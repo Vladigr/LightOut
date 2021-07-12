@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity implements FragmentListener,
 
     private ConstraintLayout fragContainer;
     public static final String timerKey="TimerStatusKey";
+    public static final String secondsKey="secondsKey";
     public static final String randomKey="RandomStatusKey";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +68,9 @@ public class MainActivity extends AppCompatActivity implements FragmentListener,
     public void startGame(SavedGame sg) {
         Intent intent = new Intent(this,GameActivity.class);
         intent.putExtra(BoardFragment.boardBundleKey,sg.getBoard());
-        intent.putExtra(MainActivity.timerKey,sg.get);
-        intent.putExtra(MainActivity.randomKey,random);
+        intent.putExtra(MainActivity.timerKey,sg.isTimed());
+        intent.putExtra(MainActivity.randomKey,sg.isRandom());
+        intent.putExtra(MainActivity.secondsKey,sg.getSecond());
         startActivity(intent);
     }
 }
