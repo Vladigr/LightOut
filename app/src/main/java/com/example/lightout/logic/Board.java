@@ -3,7 +3,9 @@ package com.example.lightout.logic;
 import android.util.Log;
 
 import java.io.Serializable;
-import java.util.Arrays;
+import java.util.ArrayList;
+
+import static java.lang.Math.pow;
 
 public class Board extends Subject implements Serializable {
     private boolean state[][];  //pivoted matrix
@@ -25,7 +27,7 @@ public class Board extends Subject implements Serializable {
             }
         }
         Log.i("Board.Board", "board state[0][0]: "+state[0][0]);
-        lightedNum = (int) Math.pow(size,2);
+        lightedNum = (int) pow(size,2);
         Log.i("Board.Board", "lightedNum: "+lightedNum);
 
     }
@@ -69,5 +71,60 @@ public class Board extends Subject implements Serializable {
         UpdateElementInMatrix(i+1,j);
         Log.i("Board.makeMove", "lightedNum: "+lightedNum);
         notifyEnd();
+    }
+
+    public class SolPoints {
+        public int getiScreen() {
+            return iScreen;
+        }
+
+        private int iScreen;
+
+        public int getjScreen() {
+            return jScreen;
+        }
+
+        public SolPoints(int iScreen, int jScreen) {
+            this.iScreen = iScreen;
+            this.jScreen = jScreen;
+        }
+
+        private int jScreen;
+    }
+    public ArrayList<SolPoints> solve(){
+        Observer saveObserver = observer;
+        observer = new NullObserver();
+        ArrayList<SolPoints> res  = recSolve((int)pow(size,2));
+        observer = saveObserver;
+        return res;
+    }
+
+    private ArrayList<SolPoints> recSolve(int n){
+        if (n==0){
+            if(checkWin() == true) return new ArrayList<>();
+            return null;
+        }
+
+        int iScreen,jScreen;
+        ArrayList<SolPoints> res;
+        iScreen = n / size;
+        jScreen = n % size;
+
+        //test whiteout press
+        res=  recSolve(n-1);
+        if(res != null){
+            res.add(new SolPoints(iScreen,jScreen));
+            return res;
+        }
+
+        //test white press
+        makeMove(iScreen,jScreen);
+        res =  recSolve(n-1);
+        if(res != null){
+            res.add(new SolPoints(iScreen,jScreen));
+        }
+        //turn the board back
+        makeMove(iScreen,jScreen);
+        return res;
     }
 }
