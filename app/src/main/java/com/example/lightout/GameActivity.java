@@ -1,5 +1,6 @@
 package com.example.lightout;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -9,6 +10,8 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +20,7 @@ import com.example.lightout.data.SavedGame;
 import com.example.lightout.logic.Board;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -30,7 +34,9 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
     //handler for counting down a second
     final Handler handler = new Handler();
     //a timer for the cound down
+    //todo: Elroee its looks weird isn't it better to move to Constructior or at le
     Timer timer = new Timer(false);
+    private Board board;
 
     private TextView txtTimeLeft;
 
@@ -69,7 +75,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
 
 
 
-        Board board = (Board) getIntent().getSerializableExtra(BoardFragment.boardBundleKey);
+        board = (Board) getIntent().getSerializableExtra(BoardFragment.boardBundleKey);
         Log.i("lightout-GameActivity", "board size: " + board.getSize());
 
         Fragment frag = BoardFragment.newInstance(board);
@@ -79,6 +85,10 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         tran.commit();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
 
     @Override
     protected void onResume() {

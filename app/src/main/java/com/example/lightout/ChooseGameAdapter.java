@@ -107,6 +107,16 @@ public class ChooseGameAdapter extends RecyclerView.Adapter<ChooseGameAdapter.Vi
                 }
             });
 
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+
+                  new CareTakerSave().deleteSave(v.getContext(), fileName[position]);
+                  updateFileNameArr(v.getContext());
+                  return true;
+                }
+            });
+
         }
     }
 

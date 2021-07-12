@@ -79,6 +79,7 @@ public class Board extends Subject implements Serializable {
         }
 
         private int iScreen;
+        private int jScreen;
 
         public int getjScreen() {
             return jScreen;
@@ -89,18 +90,24 @@ public class Board extends Subject implements Serializable {
             this.jScreen = jScreen;
         }
 
-        private int jScreen;
+        @Override
+        public String toString() {
+            return "<SolPoints{>" +
+                    "iScreen=" + iScreen +
+                    ", jScreen=" + jScreen +
+                    '>';
+        }
     }
     public ArrayList<SolPoints> solve(){
         Observer saveObserver = observer;
         observer = new NullObserver();
-        ArrayList<SolPoints> res  = recSolve((int)pow(size,2));
+        ArrayList<SolPoints> res  = recSolve((int)pow(size,2)-1);
         observer = saveObserver;
         return res;
     }
 
     private ArrayList<SolPoints> recSolve(int n){
-        if (n==0){
+        if (n==-1){
             if(checkWin() == true) return new ArrayList<>();
             return null;
         }
@@ -113,7 +120,7 @@ public class Board extends Subject implements Serializable {
         //test whiteout press
         res=  recSolve(n-1);
         if(res != null){
-            res.add(new SolPoints(iScreen,jScreen));
+            // this element didn't pressed
             return res;
         }
 
