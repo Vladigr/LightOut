@@ -1,5 +1,6 @@
 package com.example.lightout;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -10,6 +11,8 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,18 +21,26 @@ import com.example.lightout.data.SavedGame;
 import com.example.lightout.logic.Board;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class GameActivity extends AppCompatActivity implements TimerBroadcastReceiver.ListenForTimer ,BoardFragment.BoardListener,GameInterface{
+public class GameActivity extends AppCompatActivity implements TimerBroadcastReceiver.ListenForTimer ,BoardFragment.BoardListener{
+
+    public interface StarGame{ //interface for starting the game via the main activity
+        public void startGame(SavedGame sg);
+    }
     //our broadcastRecevier
     private  TimerBroadcastReceiver myTimeReceive =null;
     //the original board
     Board originalBoard;
+
     //handler for counting down a second
     final Handler handler = new Handler();
     //a timer for the cound down
     Timer timer;
+
 
     private TextView txtTimeLeft;
 
@@ -62,6 +73,10 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         tran.commit();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
 
     @Override
     protected void onResume() {
@@ -181,7 +196,8 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
             SavedGame sg = new SavedGame(board, myTimeReceive.getSeconds());
             //Todo: change to general case
             try {
-                ct.SaveData(this, sg, "save.dat");
+                int num = this.getFilesDir().listFiles().length;
+                ct.SaveData(this, sg, Integer.toString(num)+".dat");
             } catch (IOException e) {
                 throw new RuntimeException(e.getMessage());
             }

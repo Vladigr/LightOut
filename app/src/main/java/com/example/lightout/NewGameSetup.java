@@ -14,9 +14,12 @@ import android.widget.CheckBox;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import com.example.lightout.data.SavedGame;
+import com.example.lightout.logic.Board;
+
 //setup the board of the game
 public class NewGameSetup extends Fragment {
-    private StarGame listener;
+    private GameActivity.StarGame listener;
     private Button btn3on3;
     private Button btn4on4;
     private Button btn5on5;
@@ -27,7 +30,7 @@ public class NewGameSetup extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         try{
-            this.listener = (StarGame)context;
+            this.listener = (GameActivity.StarGame)context;
         }catch(ClassCastException e){
             throw new ClassCastException("the class " +
                     context.getClass().getName() +
@@ -71,7 +74,8 @@ public class NewGameSetup extends Fragment {
     private void buttonClicked(int size){
         Toast.makeText(getActivity(),"The size is = "+size+" Random = "+cboxRandomMode.isChecked()+" Timer = "+cboxTimerMode.isChecked(),Toast.LENGTH_SHORT).show();
         //do things here
-        listener.startGame(size,cboxTimerMode.isChecked(),cboxRandomMode.isChecked());
+        SavedGame sg = new SavedGame(new Board(size),cboxTimerMode.isChecked(),cboxRandomMode.isChecked(),100);
+        listener.startGame(sg);
 
     }
 
@@ -96,7 +100,4 @@ public class NewGameSetup extends Fragment {
         }
     }
 
-    public interface StarGame{ //interface for starting the game via the main activity
-        public void startGame(int size,boolean timer,boolean random);
-    }
 }

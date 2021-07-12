@@ -30,4 +30,11 @@ public class CareTakerSave {
         out.flush();
         out.close();
     }
+
+    public void deleteSave(Context context, String fileName) {
+        File file = new File(context.getFilesDir(), fileName);
+        if(file.exists()){
+            file.delete();
+        }
+    }
 }
