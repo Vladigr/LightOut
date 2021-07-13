@@ -10,7 +10,7 @@ import static java.lang.Math.pow;
 public class Board extends Subject implements Serializable {
     private boolean state[][];  //pivoted matrix
     public boolean[][] getBoard(){return state;}
-    public Boolean getElementInBoard(int iScreen, int jScreen){return state[iScreen+1][jScreen+1];}
+    public Boolean getElementInBoard(int i, int j){return state[i][j];}
     private int size;
     public int getSize(){
         return size;
@@ -20,7 +20,7 @@ public class Board extends Subject implements Serializable {
 
     public Board(int size){
         this.size = size;
-        state = new boolean[size+2][size+2];
+        state = new boolean[size][size];
         for(int i=0; i < state.length; ++i){
             for(int j=0; j < state.length; ++j){
                 state[i][j] = true;
@@ -34,11 +34,10 @@ public class Board extends Subject implements Serializable {
 
     public Board(boolean state[][]){
         this.state = state;
-        size = state.length - 2;
-        int iterSize = size + 1;
+        size = state.length;
         lightedNum = 0;
-        for(int i =1; i < iterSize; ++i){
-            for(int j =1; j < iterSize; ++j){
+        for(int i =1; i < size; ++i){
+            for(int j =1; j < size; ++j){
                 if(state[i][j] == true) ++lightedNum;
             }
         }
@@ -49,20 +48,18 @@ public class Board extends Subject implements Serializable {
     }
 
     private void UpdateElementInMatrix(int i, int j){
-        if(i > 0 && i < size + 1 && j > 0 && j < size + 1 ){
+        if(i > -1 && i < size && j > -1 && j < size ){
             state[i][j] = !state[i][j];
             if (state[i][j]){
                 ++lightedNum;
             }else{
                 --lightedNum;
             }
-            notifyChange(i-1, j-1, state[i][j]); //in screen cord
+            notifyChange(i, j, state[i][j]); //in screen cord
         }
     }
 
-    public void makeMove(int iScreen, int jScreen){
-        int i = iScreen + 1;
-        int j = jScreen + 1;
+    public void makeMove(int i, int j){
 
         UpdateElementInMatrix(i-1,j);
         UpdateElementInMatrix(i,j-1);
@@ -75,26 +72,25 @@ public class Board extends Subject implements Serializable {
 
     public class SolPoints {
         public int getiScreen() {
-            return iScreen;
+            return i;
         }
 
-        private int iScreen;
-        private int jScreen;
+        private int i;
+        private int j;
 
         public int getjScreen() {
-            return jScreen;
+            return j;
         }
 
-        public SolPoints(int iScreen, int jScreen) {
-            this.iScreen = iScreen;
-            this.jScreen = jScreen;
+        public SolPoints(int i, int j) {
+            this.i = i;
+            this.j = j;
         }
 
         @Override
         public String toString() {
-            return "<SolPoints{>" +
-                    "iScreen=" + iScreen +
-                    ", jScreen=" + jScreen +
+            return '<' + i +
+                    ", "+ j +
                     '>';
         }
     }
