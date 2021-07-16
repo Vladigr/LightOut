@@ -1,6 +1,7 @@
 package com.example.lightout;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -131,17 +132,26 @@ public class BoardFragment extends Fragment implements Observer {
                     public void onClick(View v) {
                         TableButton tbtn = (TableButton) v;
                         board.makeMove(tbtn.getI(), tbtn.getJ());
+                        if(isSolveBtn(btn)) btn.setBackgroundResource(R.drawable.solve_pressed);
                     }
                 });
         tr.addView(btn);
     }
 
+    private boolean isSolveBtn(TableButton btn){
+        Drawable.ConstantState stateA = btn.getBackground().getConstantState();
+        Drawable.ConstantState stateB = getResources().getDrawable(R.drawable.solve).getConstantState();
+        return stateA != null && stateB != null && stateA.equals(stateB) ;
+    }
     private void setColorForTableButton(int i, int j) {
         TableButton btn = btnArr[i][j];
-        if (board.getElementInBoard(i, j) == true) {
-            btn.setBackgroundResource(R.drawable.on);
-        } else {
-            btn.setBackgroundResource(R.drawable.off);
+        if(isSolveBtn(btn) == false){
+            Log.i("Boaedframgent", i + " , " + j);
+            if (board.getElementInBoard(i, j) == true) {
+                btn.setBackgroundResource(R.drawable.on);
+            } else {
+                btn.setBackgroundResource(R.drawable.off);
+            }
         }
     }
 
