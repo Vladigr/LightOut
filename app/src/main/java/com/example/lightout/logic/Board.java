@@ -29,7 +29,7 @@ public class Board extends Subject implements Serializable {
         Log.i("Board.Board", "board state[0][0]: "+state[0][0]);
         lightedNum = (int) pow(size,2);
         Log.i("Board.Board", "lightedNum: "+lightedNum);
-
+    //
     }
 
     public Board(boolean state[][]){
