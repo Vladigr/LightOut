@@ -191,8 +191,11 @@ public class BoardFragment extends Fragment implements Observer {
                 Log.i("elro","Restart game via menu");
                 break;
             case R.id.btnExit:
-                //TODO add saveing current state of the game and than function for terminating the app
                 Log.i("elro","exit game via menu");
+                getActivity().finish();
+                //System.exit(0);
+                break;
+
 
         }
         return super.onOptionsItemSelected(item);

@@ -33,14 +33,16 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
     //our broadcastRecevier
     private  TimerBroadcastReceiver myTimeReceive =null;
     //the original board
-    Board originalBoard;
+    private Board originalBoard;
 
     //handler for counting down a second
     final Handler handler = new Handler();
     //a timer for the cound down
-    Timer timer;
-    Board board;
-    long secondsLeft;
+    private Timer timer;
+    private Board board;
+    boolean timerStatus=false;
+    boolean randomStatus=false;
+    long secondsLeft=0;
 
 
     private TextView txtTimeLeft;
@@ -52,8 +54,8 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         Log.i("elro","Game Create");
         txtTimeLeft=(TextView) findViewById(R.id.txtTimeLeft);
 
-        boolean timerStatus = (boolean) getIntent().getSerializableExtra(MainActivity.timerKey);
-        boolean randomStatus = (boolean) getIntent().getSerializableExtra(MainActivity.randomKey);
+        timerStatus = (boolean) getIntent().getSerializableExtra(MainActivity.timerKey);
+        randomStatus = (boolean) getIntent().getSerializableExtra(MainActivity.randomKey);
 
         if(timerStatus==false)
         {
@@ -77,7 +79,9 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         return super.onCreateOptionsMenu(menu);
+
     }
 
     @Override
@@ -127,9 +131,24 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         }
 
     }
+    @Override
+    public void onDestroy(Board board) {
+        CareTakerSave ct = new CareTakerSave();
+        Log.i("elro","GameActictivity.onDestroy");
+        Log.i("GameActictivity.onDestroy", String.valueOf(getFilesDir()));
+        if(myTimeReceive!=null)
+        {
+            SavedGame sg = new SavedGame(board, myTimeReceive.getSeconds());
+            //Todo: change to general case
+            try {
+                int num = this.getFilesDir().listFiles().length;
+                ct.SaveData(this, sg, Integer.toString(num)+".dat");
+            } catch (IOException e) {
+                throw new RuntimeException(e.getMessage());
+            }
+        }
 
-
-
+    }
     @Override
     public void onSaveInstanceState(Bundle outState)
     {
@@ -143,6 +162,8 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         super.onRestoreInstanceState(savedInstanceState);
         //---retrieve the information persisted earlier---
     }
+
+
 
     private void startTimer(long seconds){
         //creating a time that will tick every 1 second
@@ -187,6 +208,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
 
     @Override
     public void getTime(String time) {
+
         this.txtTimeLeft.setText(time);
     }
 
@@ -202,23 +224,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         alertDialog.show(fm, "fragment_alert");
     }
 
-    @Override
-    public void onDestroy(Board board) {
-        CareTakerSave ct = new CareTakerSave();
-        Log.i("GameActictivity.onDestroy", String.valueOf(getFilesDir()));
-        if(myTimeReceive!=null)
-        {
-            SavedGame sg = new SavedGame(board, myTimeReceive.getSeconds());
-            //Todo: change to general case
-            try {
-                int num = this.getFilesDir().listFiles().length;
-                ct.SaveData(this, sg, Integer.toString(num)+".dat");
-            } catch (IOException e) {
-                throw new RuntimeException(e.getMessage());
-            }
-        }
 
-    }
 
     @Override
     public void restartGame() {
@@ -226,13 +232,24 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
 
         Board newBoard = new Board(originalBoard);
         Log.i("lightout-GameActivity", "board size: " + newBoard.getSize());
-
+        if(timerStatus==false)
+        {
+            txtTimeLeft.setText("--:--");
+        }
+        else{
+            if(myTimeReceive !=null) //if there is a broadcast receiver than cancel the timer
+            {
+                timer.cancel(); //canceling the timer thread
+                unregisterReceiver(myTimeReceive); //removing the current listener of the thread in order to register a new one
+                startTimer(secondsLeft=(long) getIntent().getSerializableExtra(MainActivity.secondsKey));
+            }
+        }
+        //creating the new fragment based on the original board that started the game
         Fragment frag = BoardFragment.newInstance(newBoard);
         FragmentTransaction tran = getSupportFragmentManager().beginTransaction();
         tran.replace(R.id.fragment_container_game_board, frag);
         tran.addToBackStack(null);
         tran.commit();
-        startTimer(secondsLeft);
     }
 
     @Override
