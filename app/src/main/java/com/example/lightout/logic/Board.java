@@ -4,8 +4,10 @@ import android.util.Log;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Random;
 
 import static java.lang.Math.pow;
+import static java.lang.Math.random;
 
 public class Board extends Subject implements Serializable {
     private boolean state[][];  //pivoted matrix
@@ -21,6 +23,10 @@ public class Board extends Subject implements Serializable {
     public Board(int size){
         this.size = size;
         state = new boolean[size][size];
+        lightAll(size);
+    }
+
+    private void lightAll(int size){
         for(int i=0; i < state.length; ++i){
             for(int j=0; j < state.length; ++j){
                 state[i][j] = true;
@@ -29,7 +35,23 @@ public class Board extends Subject implements Serializable {
         Log.i("Board.Board", "board state[0][0]: "+state[0][0]);
         lightedNum = (int) pow(size,2);
         Log.i("Board.Board", "lightedNum: "+lightedNum);
-    //
+    }
+
+    public Board(int size, boolean isRandom){
+        this.size = size;
+        state = new boolean[size][size];
+        if (isRandom == false){
+            lightAll(size);
+        }else {
+            Random rand = new Random();
+            lightedNum = 0;
+            for (int i = 0; i < state.length; ++i) {
+                for (int j = 0; j < state[0].length; ++j) {
+                    state[i][j] = rand.nextBoolean();
+                    if (state[i][j]) ++lightedNum;
+                }
+            }
+        }
     }
 
     public Board(boolean state[][]){
@@ -130,4 +152,5 @@ public class Board extends Subject implements Serializable {
         makeMove(iScreen,jScreen);
         return res;
     }
+
 }

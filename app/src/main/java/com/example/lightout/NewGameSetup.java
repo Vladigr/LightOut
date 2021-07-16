@@ -74,7 +74,8 @@ public class NewGameSetup extends Fragment {
     private void buttonClicked(int size){
         Toast.makeText(getActivity(),"The size is = "+size+" Random = "+cboxRandomMode.isChecked()+" Timer = "+cboxTimerMode.isChecked(),Toast.LENGTH_SHORT).show();
         //do things here
-        SavedGame sg = new SavedGame(new Board(size),cboxTimerMode.isChecked(),cboxRandomMode.isChecked(),100);
+        Board board = new Board(size, cboxRandomMode.isChecked());
+        SavedGame sg = new SavedGame(board,cboxTimerMode.isChecked(),cboxRandomMode.isChecked(),100);
         listener.startGame(sg);
 
     }
