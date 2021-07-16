@@ -23,12 +23,16 @@ public class CareTakerSave {
     }
 
     public void SaveData(Context context, SavedGame sg, String fileName) throws IOException {
-        File file = new File(context.getFilesDir(),fileName);
-        Log.i("CareTaker.SaveData",context.getFilesDir().toString());
-        ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
-        out.writeObject(sg);
-        out.flush();
-        out.close();
+        Log.i("caretaker.save", "check sg null : "  + Boolean.toString(sg == null) );
+        Log.i("caretaker.save", "check board null : "  + Boolean.toString(sg.getBoard() == null) );
+        if(sg != null && sg.getBoard() != null && sg.getBoard().checkWin() != true) {
+            File file = new File(context.getFilesDir(), fileName);
+            Log.i("CareTaker.SaveData", context.getFilesDir().toString());
+            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
+            out.writeObject(sg);
+            out.flush();
+            out.close();
+        }
     }
 
     public void deleteSave(Context context, String fileName) {

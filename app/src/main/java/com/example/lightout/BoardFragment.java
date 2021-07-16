@@ -22,7 +22,6 @@ import com.example.lightout.logic.Board;
 import com.example.lightout.logic.Observer;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,7 +40,7 @@ public class BoardFragment extends Fragment implements Observer {
     public interface BoardListener {
         void won();
 
-        void onDestroy(Board board);
+        void boardFragOnDestroy(Board board);
     }
 
     @Override
@@ -61,7 +60,7 @@ public class BoardFragment extends Fragment implements Observer {
     @Override
     public void onDestroy() {
         if (board.checkWin() == false) {
-            listener.onDestroy(board);
+            listener.boardFragOnDestroy(board);
         }
         super.onDestroy();
     }
