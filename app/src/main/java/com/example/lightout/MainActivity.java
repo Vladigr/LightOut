@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,28 +18,35 @@ import android.widget.Toast;
 import com.example.lightout.data.SavedGame;
 import com.example.lightout.logic.Board;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements FragmentListener, GameActivity.StarGame {
-
     private ConstraintLayout fragContainer;
     public static final String timerKey="TimerStatusKey";
     public static final String secondsKey="secondsKey";
     public static final String randomKey="RandomStatusKey";
+    private final String fragEnumKey = "fragkey";
+    private Fragment curFrag;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        fragContainer= (ConstraintLayout) findViewById(R.id.fragContainer);
-        getSupportFragmentManager().beginTransaction()
-                .setReorderingAllowed(true)
-                .add(R.id.fragContainer, MainMenuFragment.class, null,"MainMenuFragment")
-                .addToBackStack("MainMenuFragment")
-                .commit();
-        //startGameDemo();
-
+        fragContainer = (ConstraintLayout) findViewById(R.id.fragContainer);
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .add(R.id.fragContainer, MainMenuFragment.class, null, "MainMenuFragment")
+                    .addToBackStack("MainMenuFragment")
+                    .commit();
+        }
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+    }
 
     @Override
     public void OnClickEvent(Fragment fragment) {
@@ -52,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements FragmentListener,
                     .replace(R.id.fragContainer, ChoosingGameFragment.class, null,"ChoosingGameFragment")
                     .addToBackStack("ChoosingGameFragment")
                     .commit();
+
         }
         else if(fragment instanceof ChoosingGameFragment)
         {

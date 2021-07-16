@@ -111,18 +111,20 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
     protected void onDestroy() {
         super.onDestroy();
         Log.i("elro","Game Destroy");
-        //if there is a broadcastRecevier unregister it
-        if(myTimeReceive !=null)
-        {
+        Log.i("GameActictivity.onDestroy", String.valueOf(getFilesDir()));
+        long time =0;
+        if(myTimeReceive!=null) {
+            time =  myTimeReceive.getSeconds();
+
+            //if there is a broadcastRecevier unregister it
             unregisterReceiver(myTimeReceive);
         }
-        if(timer!=null)
-             timer.cancel();
+        if(timer!=null) {
+            timer.cancel();
+        }
+
         CareTakerSave ct = new CareTakerSave();
-        Log.i("GameActictivity.onDestroy", String.valueOf(getFilesDir()));
-        SavedGame sg=null;
-        if(myTimeReceive!=null)
-            sg = new SavedGame(board, myTimeReceive.getSeconds());
+        SavedGame sg = new SavedGame(board, time);
         //Todo: change to general case
         try {
             int num = this.getFilesDir().listFiles().length;
@@ -133,7 +135,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
 
     }
     @Override
-    public void onDestroy(Board board) {
+    public void boardFragOnDestroy(Board board) {
         CareTakerSave ct = new CareTakerSave();
         Log.i("elro","GameActictivity.onDestroy");
         Log.i("GameActictivity.onDestroy", String.valueOf(getFilesDir()));
