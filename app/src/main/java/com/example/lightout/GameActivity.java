@@ -72,7 +72,6 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         Fragment frag = BoardFragment.newInstance(board);
         FragmentTransaction tran = getSupportFragmentManager().beginTransaction();
         tran.replace(R.id.fragment_container_game_board, frag);
-        tran.addToBackStack(null);
         tran.commit();
         //ewfwf
     }
@@ -248,7 +247,6 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         Fragment frag = BoardFragment.newInstance(newBoard);
         FragmentTransaction tran = getSupportFragmentManager().beginTransaction();
         tran.replace(R.id.fragment_container_game_board, frag);
-        tran.addToBackStack(null);
         tran.commit();
     }
 

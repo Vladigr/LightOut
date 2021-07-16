@@ -21,15 +21,19 @@ import java.util.ArrayList;
 public class ChooseGameAdapter extends RecyclerView.Adapter<ChooseGameAdapter.ViewHolder>{
     private String[] fileName;
     private GameActivity.StarGame listener;
+    private IChooseGameAdapter adapterListener;
 
-    public ChooseGameAdapter(Context context) {
+    public ChooseGameAdapter(Context context,IChooseGameAdapter adapterListener) {
         updateFileNameArr(context);
+        this.adapterListener=adapterListener;
+
         try{
             this.listener = (GameActivity.StarGame)context;
+
         }catch(ClassCastException e){
             throw new ClassCastException("the class " +
                     context.getClass().getName() +
-                    " must implements the interface 'FragAListener'");
+                    " must implements the interface 'GameActivity'");
         }
     }
 
@@ -110,9 +114,11 @@ public class ChooseGameAdapter extends RecyclerView.Adapter<ChooseGameAdapter.Vi
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-
                   new CareTakerSave().deleteSave(v.getContext(), fileName[position]);
                   updateFileNameArr(v.getContext());
+                  //refresh the adapter to remove the removed button
+                  adapterListener.refreshAdapter();
+
                   return true;
                 }
             });
@@ -120,6 +126,8 @@ public class ChooseGameAdapter extends RecyclerView.Adapter<ChooseGameAdapter.Vi
         }
     }
 
-
-
+    //interface to update the adapter from the fragment
+    public interface IChooseGameAdapter{
+        public void refreshAdapter();
+    }
 }
