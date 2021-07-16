@@ -36,8 +36,8 @@ public class Board extends Subject implements Serializable {
         this.state = state;
         size = state.length;
         lightedNum = 0;
-        for(int i =1; i < size; ++i){
-            for(int j =1; j < size; ++j){
+        for(int i =0; i < size; ++i){
+            for(int j =0; j < size; ++j){
                 if(state[i][j] == true) ++lightedNum;
             }
         }
@@ -46,7 +46,7 @@ public class Board extends Subject implements Serializable {
     //duplicate the board
     public Board(Board newBoard){
         this.size = newBoard.size;
-        state = new boolean[size+2][size+2];
+        state = new boolean[size][size];
 
         Log.i("Board.Board", "board state[0][0]: "+state[0][0]);
         lightedNum = (int) Math.pow(size,2);
