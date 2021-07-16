@@ -80,9 +80,7 @@ public class BoardFragment extends Fragment implements Observer {
     public static BoardFragment newInstance(Board board) {
         BoardFragment fragment = new BoardFragment();
         Bundle args = new Bundle();
-
         args.putSerializable(boardBundleKey, board);
-
         fragment.setArguments(args);
         return fragment;
     }

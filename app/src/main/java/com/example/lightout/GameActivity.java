@@ -69,7 +69,9 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         originalBoard= new Board(board);
         Log.i("lightout-GameActivity", "board size: " + board.getSize());
 
+
         Fragment frag = BoardFragment.newInstance(board);
+
         FragmentTransaction tran = getSupportFragmentManager().beginTransaction();
         tran.replace(R.id.fragment_container_game_board, frag);
         tran.commit();
