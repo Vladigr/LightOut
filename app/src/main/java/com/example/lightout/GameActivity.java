@@ -72,6 +72,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         tran.replace(R.id.fragment_container_game_board, frag);
         tran.addToBackStack(null);
         tran.commit();
+        //ewfwf
     }
 
     @Override
