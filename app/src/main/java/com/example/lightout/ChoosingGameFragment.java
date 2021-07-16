@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 
 
 //choosing which game the player wants, saved or new
-public class ChoosingGameFragment extends Fragment  implements View.OnClickListener{
+public class ChoosingGameFragment extends Fragment  implements View.OnClickListener, ChooseGameAdapter.IChooseGameAdapter {
     private FragmentListener listener;
     private ChooseGameAdapter myGameAdapter;
     @Override
@@ -34,7 +34,8 @@ public class ChoosingGameFragment extends Fragment  implements View.OnClickListe
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        myGameAdapter = new ChooseGameAdapter(getActivity());
+        myGameAdapter = new ChooseGameAdapter(getActivity(),this);
+
     }
 
     @Override
@@ -59,5 +60,10 @@ public class ChoosingGameFragment extends Fragment  implements View.OnClickListe
     @Override
     public void onClick(View v) {
         listener.OnClickEvent(this);
+    }
+
+    @Override
+    public void refreshAdapter() {
+        myGameAdapter.notifyDataSetChanged();
     }
 }

@@ -61,7 +61,6 @@ public class NewGameSetup extends Fragment {
         btn5on5= (Button) view.findViewById(R.id.btn5on5);
         cboxTimerMode=(CheckBox)view.findViewById(R.id.cboxTimerMode);
         cboxRandomMode=(CheckBox)view.findViewById(R.id.cboxRandomMode);
-
         // by cookbook:
         btn3on3.setOnClickListener(new Listener3on3());
         btn4on4.setOnClickListener(new Listener4on4());

@@ -32,6 +32,7 @@ import java.util.Collection;
 public class BoardFragment extends Fragment implements Observer {
 
     private TableButton[][] btnArr;
+    private GameInterface gameInterface;
 
     private Board board;
     public static final String boardBundleKey = "board_key";
@@ -48,6 +49,7 @@ public class BoardFragment extends Fragment implements Observer {
 
         try {
             this.listener = (BoardListener) context;
+            this.gameInterface=(GameInterface)context;
         } catch (ClassCastException e) {
             throw new ClassCastException("the class " +
                     context.getClass().getName() +
@@ -78,9 +80,7 @@ public class BoardFragment extends Fragment implements Observer {
     public static BoardFragment newInstance(Board board) {
         BoardFragment fragment = new BoardFragment();
         Bundle args = new Bundle();
-
         args.putSerializable(boardBundleKey, board);
-
         fragment.setArguments(args);
         return fragment;
     }
@@ -183,6 +183,18 @@ public class BoardFragment extends Fragment implements Observer {
                 }
                 Toast.makeText(getActivity(), "press the green button from bottom right to bottom left and to the top",Toast.LENGTH_LONG).show();
                 break;
+            //if the clicked button is Restart in the menu
+            case R.id.btnRestart:
+                gameInterface.restartGame();
+                Log.i("elro","Restart game via menu");
+                break;
+            case R.id.btnExit:
+                Log.i("elro","exit game via menu");
+                getActivity().finish();
+                //System.exit(0);
+                break;
+
+
         }
         return super.onOptionsItemSelected(item);
     }

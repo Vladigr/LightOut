@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
-//a broadcastReceiver for the timer of the game, every tick will be recived and the timer will go
+//broadcastReceiver for the timer of the game, every tick will be received and the timer will go
 //down by 1 for every second
 public class TimerBroadcastReceiver extends BroadcastReceiver {
     //the seconds left for the end of the game
