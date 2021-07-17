@@ -203,19 +203,19 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
             if (timer != null) {
                 timer.cancel();
             }
+
+            //Todo: change to general case
+            try {
+
+                SavedGame sg = new SavedGame(this.board, timerStatus, randomStatus, time, fileName);
+                ct.SaveData(this, sg, fileName);
+                Log.i("GameActictivity.onDestroy", "filename2: " + fileName);
+            } catch (IOException e) {
+                throw new RuntimeException(e.getMessage());
+            }
         }
         else
             flagRestart=false;
-
-        //Todo: change to general case
-        try {
-
-            SavedGame sg = new SavedGame(board, timerStatus, randomStatus, time, fileName);
-            ct.SaveData(this, sg, fileName);
-            Log.i("GameActictivity.onDestroy", "filename2: " + fileName);
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
-        }
 
        if(board.checkWin() == true && fileName != null){
 
