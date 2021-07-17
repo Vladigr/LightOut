@@ -272,6 +272,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         FragmentManager fm = getSupportFragmentManager();
         WinLoseDialog alertDialog = WinLoseDialog.newInstance("Defeat");
         alertDialog.connectGameInterface(this);
+        alertDialog.setCancelable(false);
         alertDialog.show(fm, "fragment_alert");
     }
 
@@ -290,6 +291,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         FragmentManager fm = getSupportFragmentManager();
         WinLoseDialog alertDialog = WinLoseDialog.newInstance("You Are Victorious");
         alertDialog.connectGameInterface(this);
+        alertDialog.setCancelable(false);
         alertDialog.show(fm, "fragment_alert");
     }
 
