@@ -191,7 +191,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
     public void boardFragOnPause(Board board) {
         CareTakerSave ct = new CareTakerSave();
         long time = -1;
-        Log.i("elro","GameActictivity.onDestroy");
+        Log.i("elro","GameActictivity.boardFragOnPause");
         //Log.i("GameActictivity.onDestroy", String.valueOf(getFilesDir()));
         //Todo: elroee explain why  myTimeReceive!=null
         if(myTimeReceive!=null) {
@@ -327,6 +327,13 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         /*this.getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         Intent intent = new Intent(this,MainActivity.class);
         startActivity(intent);*/
+        finish();
+    }
+    @Override
+    public void endOnSolve()
+    {
+        Log.i("endOnSolve","GameActivity::endOnSolve");
+        (new CareTakerSave()).deleteSave(this,fileName);
         finish();
     }
 }

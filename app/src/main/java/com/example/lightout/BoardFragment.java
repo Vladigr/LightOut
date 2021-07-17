@@ -34,6 +34,7 @@ public class BoardFragment extends Fragment implements Observer {
 
     private TableButton[][] btnArr;
     private GameInterface gameInterface;
+    private boolean flgSolvedPressed=false;
 
     private Board board;
     public static final String boardBundleKey = "board_key";
@@ -68,7 +69,8 @@ public class BoardFragment extends Fragment implements Observer {
     @Override
     public void onPause() {
         Log.i("BoardGame.state", "BoardGame.onPause");
-        listener.boardFragOnPause(board);
+        if(flgSolvedPressed==false)
+          listener.boardFragOnPause(board);
         super.onPause();
     }
 
@@ -197,6 +199,10 @@ public class BoardFragment extends Fragment implements Observer {
                 for (Board.SolPoints sp : solPoints) {
                     btnArr[sp.getiScreen()][sp.getjScreen()].setBackgroundResource(R.drawable.solve);
                 }*/
+
+                gameInterface.endOnSolve();
+                flgSolvedPressed=true;
+
                 startMySerivice();
                 //Toast.makeText(getActivity(), "press the green button from bottom right to bottom left and to the top",Toast.LENGTH_LONG).show();
                 break;
