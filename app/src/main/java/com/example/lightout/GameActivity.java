@@ -13,6 +13,8 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +34,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
     }
     //our broadcastRecevier
     private  TimerBroadcastReceiver myTimeReceive =null;
+    private Button btn;
     //the original board
     private Board originalBoard;
 
@@ -75,6 +78,15 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         FragmentTransaction tran = getSupportFragmentManager().beginTransaction();
         tran.replace(R.id.fragment_container_game_board, frag);
         tran.commit();
+
+
+         btn=(Button)findViewById(R.id.btnStart);
+         btn.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 startMySerivice();
+             }
+         });
         //ewfwf
     }
 
@@ -110,8 +122,8 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.i("elro","Game Destroy");
-        Log.i("GameActictivity.onDestroy", String.valueOf(getFilesDir()));
+        Log.i("elro","GameActivity::onDestroy()");
+
         long time =0;
         if(myTimeReceive!=null) {
             time =  myTimeReceive.getSeconds();
@@ -132,13 +144,14 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
+        startMySerivice();
 
     }
     @Override
     public void boardFragOnDestroy(Board board) {
         CareTakerSave ct = new CareTakerSave();
-        Log.i("elro","GameActictivity.onDestroy");
-        Log.i("GameActictivity.onDestroy", String.valueOf(getFilesDir()));
+        //Log.i("elro","GameActictivity.onDestroy");
+        //Log.i("GameActictivity.onDestroy", String.valueOf(getFilesDir()));
         if(myTimeReceive!=null)
         {
             SavedGame sg = new SavedGame(board, myTimeReceive.getSeconds());
@@ -166,8 +179,13 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         //---retrieve the information persisted earlier---
     }
 
-
-
+    private void startMySerivice(){
+        Log.i("elro","GameActivity::startService()");
+        Intent serviceIntent= new Intent(this,SearchSolutionService.class);
+        serviceIntent.putExtra(SearchSolutionService.IS_THREAD_KEY,false);
+        serviceIntent.putExtra(SearchSolutionService.BOARD_KEY,board);
+        startService(serviceIntent);
+    }
     private void startTimer(long seconds){
         //creating a time that will tick every 1 second
         TimerTask timerTask = new TimerTask() {
