@@ -125,12 +125,6 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
                 }
             }).commit();
         }
-
-
-
-
-
-
     }
 
     @Override

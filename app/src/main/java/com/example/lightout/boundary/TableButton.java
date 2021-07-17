@@ -11,6 +11,7 @@ import android.widget.TableRow;
 import androidx.annotation.NonNull;
 
 public class TableButton extends androidx.appcompat.widget.AppCompatButton {
+    private final int dpPixelValue=70;
     public int getI() {
         return i;
     }
@@ -35,7 +36,7 @@ public class TableButton extends androidx.appcompat.widget.AppCompatButton {
 
     public TableButton(@NonNull Context context, int i, int j, boolean state) {
         super(context);
-        int pxSize = (int) dpToPixel(50);
+        int pxSize = (int) dpToPixel(dpPixelValue);
         Log.i("tableButton", "pxsize: " + pxSize);
         this.setLayoutParams(new TableRow.LayoutParams(pxSize,pxSize));
         this.i =i;
