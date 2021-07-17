@@ -88,6 +88,8 @@ public class SearchSolutionService extends Service {
                         Intent serviceIntent = new Intent(getApplicationContext(), SearchSolutionService.class);
                         serviceIntent.putExtra(SearchSolutionService.IS_THREAD_KEY, true);
                         serviceIntent.putExtra(SearchSolutionService.IS_BOARD_SOLVED, true);
+                        serviceIntent.putExtra(SOLUTION_KEY,solPoints);
+                        serviceIntent.putExtra(BOARD_KEY,mBoard);
                         //serviceIntent.putExtra(SearchSolutionService.SOLUTION_KEY, solPoints.toArray());
                         serviceIntent.putExtra(MSG_KEY,"I found the solution");
                         startService(serviceIntent);
@@ -103,8 +105,13 @@ public class SearchSolutionService extends Service {
             //add extars for the solution
 
             notificationIntent.putExtra(IS_BOARD_SOLVED,intent.getBooleanExtra(IS_BOARD_SOLVED,false));
+            //choosing the type of call
             notificationIntent.putExtra(GameActivity.SOLUTION_TYPE,true);
             notificationIntent.putExtra(GameActivity.MAIN_TYPE,false);
+            //sending back the solution
+            notificationIntent.putExtra(SOLUTION_KEY,intent.getSerializableExtra(SOLUTION_KEY));
+            //sending back the desired board
+            notificationIntent.putExtra(BOARD_KEY,intent.getSerializableExtra(BOARD_KEY));
             //adding the board solution
             notificationIntent.putExtra(MSG_KEY,intent.getStringExtra(MSG_KEY));
 

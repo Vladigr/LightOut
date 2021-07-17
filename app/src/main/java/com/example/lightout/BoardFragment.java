@@ -216,6 +216,12 @@ public class BoardFragment extends Fragment implements Observer {
         return super.onOptionsItemSelected(item);
     }
 
+    public void drawSolution( ArrayList<Board.SolPoints> solPoints){
+        for (Board.SolPoints sp : solPoints) {
+            btnArr[sp.getiScreen()][sp.getjScreen()].setBackgroundResource(R.drawable.solve);
+        }
+    }
+
     private void startMySerivice(){
         Log.i("elro","GameActivity::startService()");
         Intent serviceIntent= new Intent( getContext(),SearchSolutionService.class);

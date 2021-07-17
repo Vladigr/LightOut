@@ -63,6 +63,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         boolean isMainActivity = getIntent().getBooleanExtra(MAIN_TYPE,false);
         boolean isSolution = getIntent().getBooleanExtra(SOLUTION_TYPE,false);
 
+
         if((isMainActivity==true) && (isSolution==false))
         {
             Toast.makeText(this,"is Main",Toast.LENGTH_LONG);
@@ -90,11 +91,13 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
             board = (Board) getIntent().getSerializableExtra(BoardFragment.boardBundleKey);
             originalBoard= new Board(board);
             Log.i("lightout-GameActivity", "board size: " + board.getSize());
-
             Fragment frag = BoardFragment.newInstance(board);
             FragmentTransaction tran = getSupportFragmentManager().beginTransaction();
             tran.replace(R.id.fragment_container_game_board, frag);
             tran.commit();
+
+
+
         }
         if((isMainActivity==false) && (isSolution==true))
         {
@@ -104,8 +107,26 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
            // Toast.makeText(this, "press the green button from bottom right to bottom left and to the top",Toast.LENGTH_LONG).show();
             String result=getIntent().getStringExtra(SearchSolutionService.MSG_KEY);
             Toast.makeText(this, "result = "+result,Toast.LENGTH_LONG).show();
+            ArrayList<Board.SolPoints> solPoints = ( ArrayList<Board.SolPoints>) getIntent().getSerializableExtra(SearchSolutionService.SOLUTION_KEY);
+            board = (Board) getIntent().getSerializableExtra(SearchSolutionService.BOARD_KEY);
+
+            Fragment frag = BoardFragment.newInstance(board);
+            FragmentTransaction tran = getSupportFragmentManager().beginTransaction();
+            tran.replace(R.id.fragment_container_game_board, frag);
+            //adding the runnable because comit doesnt not take place until the function is ended
+            //therefore e need runner for initilizing our fragment and than update the board acoring to the solution
+            tran.runOnCommit(new Runnable() {
+                @Override
+                public void run() {
+                    ((BoardFragment) frag).drawSolution(solPoints);
+                }
+            }).commit();
+
+
 
         }
+
+
 
 
 

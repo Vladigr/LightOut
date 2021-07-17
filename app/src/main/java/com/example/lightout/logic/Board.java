@@ -109,7 +109,7 @@ public class Board extends Subject implements Serializable {
         notifyEnd();
     }
 
-    public class SolPoints {
+    public class SolPoints implements Serializable {
         public int getiScreen() {
             return i;
         }
