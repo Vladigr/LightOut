@@ -107,9 +107,9 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
 
             Log.i("newElro","going for solution, solution"+getIntent().getStringExtra(SearchSolutionService.MSG_KEY));
             //get solved board
-           // Toast.makeText(this, "press the green button from bottom right to bottom left and to the top",Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "press the green button from bottom right to bottom left and to the top",Toast.LENGTH_LONG).show();
             String result=getIntent().getStringExtra(SearchSolutionService.MSG_KEY);
-            Toast.makeText(this, "result = "+result,Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, "result = "+result,Toast.LENGTH_LONG).show();
             ArrayList<Board.SolPoints> solPoints = ( ArrayList<Board.SolPoints>) getIntent().getSerializableExtra(SearchSolutionService.SOLUTION_KEY);
             board = (Board) getIntent().getSerializableExtra(SearchSolutionService.BOARD_KEY);
 
