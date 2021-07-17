@@ -43,6 +43,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
     boolean timerStatus=false;
     boolean randomStatus=false;
     long secondsLeft=0;
+    private String fileName;
 
 
     private TextView txtTimeLeft;
@@ -63,6 +64,14 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         }
         else{
             startTimer(secondsLeft=(long) getIntent().getSerializableExtra(MainActivity.secondsKey));
+        }
+
+        fileName = (String) getIntent().getSerializableExtra(MainActivity.fileNameKey);
+        // must be here because pause can be invoke many times without any name
+        if(fileName == null){
+            int num = this.getFilesDir().listFiles().length;
+            fileName = Integer.toString(num) + ".dat";
+            getIntent().putExtra(MainActivity.fileNameKey, fileName);
         }
 
         board = (Board) getIntent().getSerializableExtra(BoardFragment.boardBundleKey);
@@ -110,7 +119,8 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.i("elro","Game Destroy");
+        //Todo: can it be delete?
+       /* Log.i("elro","Game Destroy");
         Log.i("GameActictivity.onDestroy", String.valueOf(getFilesDir()));
         long time =0;
         if(myTimeReceive!=null) {
@@ -124,33 +134,41 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         }
 
         CareTakerSave ct = new CareTakerSave();
-        SavedGame sg = new SavedGame(board, time);
+        SavedGame sg = new SavedGame(board, timerStatus, randomStatus, time, fileName);
         //Todo: change to general case
         try {
             int num = this.getFilesDir().listFiles().length;
             ct.SaveData(this, sg, Integer.toString(num)+".dat");
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
-        }
+        }*/
 
     }
     @Override
-    public void boardFragOnDestroy(Board board) {
+    public void boardFragOnPause(Board board) {
         CareTakerSave ct = new CareTakerSave();
+        long time = -1;
         Log.i("elro","GameActictivity.onDestroy");
-        Log.i("GameActictivity.onDestroy", String.valueOf(getFilesDir()));
-        if(myTimeReceive!=null)
-        {
-            SavedGame sg = new SavedGame(board, myTimeReceive.getSeconds());
-            //Todo: change to general case
-            try {
-                int num = this.getFilesDir().listFiles().length;
-                ct.SaveData(this, sg, Integer.toString(num)+".dat");
-            } catch (IOException e) {
-                throw new RuntimeException(e.getMessage());
-            }
+        //Log.i("GameActictivity.onDestroy", String.valueOf(getFilesDir()));
+        //Todo: elroee explain why  myTimeReceive!=null
+        if(myTimeReceive!=null){
+            time = myTimeReceive.getSeconds();
         }
 
+        //Todo: change to general case
+        try {
+
+            SavedGame sg = new SavedGame(board, timerStatus, randomStatus, time, fileName);
+            ct.SaveData(this, sg, fileName);
+            Log.i("GameActictivity.onDestroy", "filename2: " + fileName);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+       if(board.checkWin() == true && fileName != null){
+
+            ct.deleteSave(this, fileName);
+        }
     }
     @Override
     public void onSaveInstanceState(Bundle outState)

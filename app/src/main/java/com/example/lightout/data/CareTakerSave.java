@@ -27,6 +27,9 @@ public class CareTakerSave {
         Log.i("caretaker.save", "check board null : "  + Boolean.toString(sg.getBoard() == null) );
         if(sg != null && sg.getBoard() != null && sg.getBoard().checkWin() != true) {
             File file = new File(context.getFilesDir(), fileName);
+            if( file.exists()){
+                deleteSave(context,fileName);
+            }
             Log.i("CareTaker.SaveData", context.getFilesDir().toString());
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
             out.writeObject(sg);
