@@ -190,6 +190,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         long time = -1;
         Log.i("elro","GameActictivity.boardFragOnPause");
         //Log.i("GameActictivity.onDestroy", String.valueOf(getFilesDir()));
+        /*
         //Todo: elroee explain why  myTimeReceive!=null
         if(myTimeReceive!=null) {
             time =  myTimeReceive.getSeconds();
@@ -200,6 +201,8 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         if(timer!=null) {
             timer.cancel();
         }
+
+         */
 
         //Todo: change to general case
         try {
