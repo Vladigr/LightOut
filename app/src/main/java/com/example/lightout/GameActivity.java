@@ -62,8 +62,6 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         boolean isMainActivity = getIntent().getBooleanExtra(MAIN_TYPE,false);
         boolean isSolution = getIntent().getBooleanExtra(SOLUTION_TYPE,false);
 
-
-
         if((isMainActivity==true) && (isSolution==false))
         {
             Toast.makeText(this,"is Main",Toast.LENGTH_LONG);
