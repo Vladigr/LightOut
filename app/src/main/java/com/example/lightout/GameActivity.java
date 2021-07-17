@@ -49,6 +49,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
     boolean randomStatus=false;
     long secondsLeft=0;
     private String fileName;
+    private boolean flagRestart=false;
 
 
     private TextView txtTimeLeft;
@@ -190,19 +191,21 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         long time = -1;
         Log.i("elro","GameActictivity.boardFragOnPause");
         //Log.i("GameActictivity.onDestroy", String.valueOf(getFilesDir()));
-        /*
-        //Todo: elroee explain why  myTimeReceive!=null
-        if(myTimeReceive!=null) {
-            time =  myTimeReceive.getSeconds();
 
-            //if there is a broadcastRecevier unregister it
-            unregisterReceiver(myTimeReceive);
-        }
-        if(timer!=null) {
-            timer.cancel();
-        }
+        if(flagRestart==false) {
+            //Todo: elroee explain why  myTimeReceive!=null
+            if (myTimeReceive != null) {
+                time = myTimeReceive.getSeconds();
 
-         */
+                //if there is a broadcastRecevier unregister it
+                unregisterReceiver(myTimeReceive);
+            }
+            if (timer != null) {
+                timer.cancel();
+            }
+        }
+        else
+            flagRestart=false;
 
         //Todo: change to general case
         try {
@@ -315,6 +318,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
                 startTimer(secondsLeft=(long) getIntent().getSerializableExtra(MainActivity.secondsKey));
             }
         }
+        flagRestart=true;
         //creating the new fragment based on the original board that started the game
         Fragment frag = BoardFragment.newInstance(newBoard);
         FragmentTransaction tran = getSupportFragmentManager().beginTransaction();
