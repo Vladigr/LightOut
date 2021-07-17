@@ -28,13 +28,14 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class GameActivity extends AppCompatActivity implements TimerBroadcastReceiver.ListenForTimer ,BoardFragment.BoardListener,GameInterface{
+    public static final String MAIN_TYPE="MainActivity";
+    public static final String SOLUTION_TYPE="solutionFound";
 
     public interface StarGame{ //interface for starting the game via the main activity
         public void startGame(SavedGame sg);
     }
     //our broadcastRecevier
     private  TimerBroadcastReceiver myTimeReceive =null;
-    private Button btn;
     //the original board
     private Board originalBoard;
 
@@ -50,44 +51,55 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
 
     private TextView txtTimeLeft;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_layout);
-        Log.i("elro","Game Create");
+        Log.i("gameActivity","Game Create");
         txtTimeLeft=(TextView) findViewById(R.id.txtTimeLeft);
 
-        timerStatus = (boolean) getIntent().getSerializableExtra(MainActivity.timerKey);
-        randomStatus = (boolean) getIntent().getSerializableExtra(MainActivity.randomKey);
+        boolean isMainActivity = getIntent().getBooleanExtra(MAIN_TYPE,false);
+        boolean isSolution = getIntent().getBooleanExtra(SOLUTION_TYPE,false);
 
-        if(timerStatus==false)
+
+
+        if((isMainActivity==true) && (isSolution==false))
+        {
+            Toast.makeText(this,"is Main",Toast.LENGTH_LONG);
+            timerStatus = (boolean) getIntent().getSerializableExtra(MainActivity.timerKey);
+            randomStatus = (boolean) getIntent().getSerializableExtra(MainActivity.randomKey);
+            if(timerStatus==false)
+            {
+                txtTimeLeft.setText("--:--");
+            }
+            else{
+                startTimer(secondsLeft=(long) getIntent().getSerializableExtra(MainActivity.secondsKey));
+            }
+
+            board = (Board) getIntent().getSerializableExtra(BoardFragment.boardBundleKey);
+            originalBoard= new Board(board);
+            Log.i("lightout-GameActivity", "board size: " + board.getSize());
+
+            Fragment frag = BoardFragment.newInstance(board);
+            FragmentTransaction tran = getSupportFragmentManager().beginTransaction();
+            tran.replace(R.id.fragment_container_game_board, frag);
+            tran.commit();
+        }
+        if((isMainActivity==false) && (isSolution==true))
         {
             txtTimeLeft.setText("--:--");
+            Log.i("newElro","going for solution, solution"+getIntent().getStringExtra(SearchSolutionService.MSG_KEY));
+            //get solved board
+           // Toast.makeText(this, "press the green button from bottom right to bottom left and to the top",Toast.LENGTH_LONG).show();
+            String result=getIntent().getStringExtra(SearchSolutionService.MSG_KEY);
+            Toast.makeText(this, "result = "+result,Toast.LENGTH_LONG).show();
+
         }
-        else{
-            startTimer(secondsLeft=(long) getIntent().getSerializableExtra(MainActivity.secondsKey));
-        }
-
-        board = (Board) getIntent().getSerializableExtra(BoardFragment.boardBundleKey);
-        originalBoard= new Board(board);
-        Log.i("lightout-GameActivity", "board size: " + board.getSize());
 
 
-        Fragment frag = BoardFragment.newInstance(board);
-
-        FragmentTransaction tran = getSupportFragmentManager().beginTransaction();
-        tran.replace(R.id.fragment_container_game_board, frag);
-        tran.commit();
 
 
-         btn=(Button)findViewById(R.id.btnStart);
-         btn.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View v) {
-                 startMySerivice();
-             }
-         });
-        //ewfwf
     }
 
     @Override
@@ -100,7 +112,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
     @Override
     protected void onResume() {
         super.onResume();
-        Log.i("elro","Game Resume");
+        Log.i("gameActivity","Game Resume");
         //if there is a broadcast set it to resume
         if(myTimeReceive !=null)
         {
@@ -111,7 +123,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
     @Override
     protected void onPause() {
         super.onPause();
-        Log.i("elro","Game Pause");
+        Log.i("gameActivity","Game Pause");
         //if there is a broadcast pause the countdown
         if(myTimeReceive !=null)
         {
@@ -122,7 +134,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.i("elro","GameActivity::onDestroy()");
+        Log.i("gameActivity","GameActivity::onDestroy()");
 
         long time =0;
         if(myTimeReceive!=null) {
@@ -144,7 +156,6 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
-        startMySerivice();
 
     }
     @Override
@@ -179,13 +190,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         //---retrieve the information persisted earlier---
     }
 
-    private void startMySerivice(){
-        Log.i("elro","GameActivity::startService()");
-        Intent serviceIntent= new Intent(this,SearchSolutionService.class);
-        serviceIntent.putExtra(SearchSolutionService.IS_THREAD_KEY,false);
-        serviceIntent.putExtra(SearchSolutionService.BOARD_KEY,board);
-        startService(serviceIntent);
-    }
+
     private void startTimer(long seconds){
         //creating a time that will tick every 1 second
         TimerTask timerTask = new TimerTask() {

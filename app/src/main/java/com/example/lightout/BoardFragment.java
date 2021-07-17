@@ -186,12 +186,14 @@ public class BoardFragment extends Fragment implements Observer {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.solve:
+                /*
                 ArrayList<Board.SolPoints> solPoints = board.solve();
                 Log.i("solve", solPoints.toString());
                 for (Board.SolPoints sp : solPoints) {
                     btnArr[sp.getiScreen()][sp.getjScreen()].setBackgroundResource(R.drawable.solve);
-                }
-                Toast.makeText(getActivity(), "press the green button from bottom right to bottom left and to the top",Toast.LENGTH_LONG).show();
+                }*/
+                startMySerivice();
+                //Toast.makeText(getActivity(), "press the green button from bottom right to bottom left and to the top",Toast.LENGTH_LONG).show();
                 break;
             //if the clicked button is Restart in the menu
             case R.id.btnRestart:
@@ -207,6 +209,17 @@ public class BoardFragment extends Fragment implements Observer {
 
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void startMySerivice(){
+        Log.i("elro","GameActivity::startService()");
+        Intent serviceIntent= new Intent( getContext(),SearchSolutionService.class);
+        serviceIntent.putExtra(SearchSolutionService.IS_THREAD_KEY,false);
+        serviceIntent.putExtra(SearchSolutionService.BOARD_KEY,board);
+
+
+
+        getContext().startService(serviceIntent);
     }
 
 

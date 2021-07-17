@@ -82,6 +82,8 @@ public class MainActivity extends AppCompatActivity implements FragmentListener,
     @Override
     public void startGame(SavedGame sg) {
         Intent intent = new Intent(this,GameActivity.class);
+        intent.putExtra(GameActivity.SOLUTION_TYPE,false);
+        intent.putExtra(GameActivity.MAIN_TYPE,true);
         intent.putExtra(BoardFragment.boardBundleKey,sg.getBoard());
         intent.putExtra(MainActivity.timerKey,sg.isTimed());
         intent.putExtra(MainActivity.randomKey,sg.isRandom());
