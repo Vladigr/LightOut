@@ -243,6 +243,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         WinLoseDialog alertDialog = WinLoseDialog.newInstance("You Are Victorious");
         alertDialog.connectGameInterface(this);
         alertDialog.show(fm, "fragment_alert");
+        //for destory the activity not living live fragment
     }
 
 
@@ -275,8 +276,10 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
     @Override
     public void endGame() {
         Log.i("elro","game ended");
-        this.getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        //Todo: ask if it better
+        /*this.getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         Intent intent = new Intent(this,MainActivity.class);
-        startActivity(intent);
+        startActivity(intent);*/
+        finish();
     }
 }
