@@ -26,8 +26,7 @@ public class MainActivity extends AppCompatActivity implements FragmentListener,
     public static final String timerKey="TimerStatusKey";
     public static final String secondsKey="secondsKey";
     public static final String randomKey="RandomStatusKey";
-    private final String fragEnumKey = "fragkey";
-    private Fragment curFrag;
+    public static final String fileNameKey="fileNameKey";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements FragmentListener,
         intent.putExtra(MainActivity.timerKey,sg.isTimed());
         intent.putExtra(MainActivity.randomKey,sg.isRandom());
         intent.putExtra(MainActivity.secondsKey,sg.getSecond());
+        intent.putExtra(MainActivity.fileNameKey,sg.getFileName());
         startActivity(intent);
     }
 

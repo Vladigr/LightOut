@@ -47,6 +47,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
     boolean timerStatus=false;
     boolean randomStatus=false;
     long secondsLeft=0;
+    private String fileName;
 
 
     private TextView txtTimeLeft;
@@ -75,6 +76,17 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
                 startTimer(secondsLeft=(long) getIntent().getSerializableExtra(MainActivity.secondsKey));
             }
 
+        fileName = (String) getIntent().getSerializableExtra(MainActivity.fileNameKey);
+        // must be here because pause can be invoke many times without any name
+        if(fileName == null){
+            int num = this.getFilesDir().listFiles().length;
+            fileName = Integer.toString(num) + ".dat";
+            getIntent().putExtra(MainActivity.fileNameKey, fileName);
+        }
+
+        board = (Board) getIntent().getSerializableExtra(BoardFragment.boardBundleKey);
+        originalBoard= new Board(board);
+        Log.i("lightout-GameActivity", "board size: " + board.getSize());
             board = (Board) getIntent().getSerializableExtra(BoardFragment.boardBundleKey);
             originalBoard= new Board(board);
             Log.i("lightout-GameActivity", "board size: " + board.getSize());
@@ -132,6 +144,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        /*
         Log.i("gameActivity","GameActivity::onDestroy()");
 
         long time =0;
@@ -146,33 +159,47 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         }
 
         CareTakerSave ct = new CareTakerSave();
-        SavedGame sg = new SavedGame(board, time);
+        SavedGame sg = new SavedGame(board, timerStatus, randomStatus, time, fileName);
         //Todo: change to general case
         try {
             int num = this.getFilesDir().listFiles().length;
             ct.SaveData(this, sg, Integer.toString(num)+".dat");
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
-        }
+        }*/
 
     }
     @Override
-    public void boardFragOnDestroy(Board board) {
+    public void boardFragOnPause(Board board) {
         CareTakerSave ct = new CareTakerSave();
-        //Log.i("elro","GameActictivity.onDestroy");
+        long time = -1;
+        Log.i("elro","GameActictivity.onDestroy");
         //Log.i("GameActictivity.onDestroy", String.valueOf(getFilesDir()));
-        if(myTimeReceive!=null)
-        {
-            SavedGame sg = new SavedGame(board, myTimeReceive.getSeconds());
-            //Todo: change to general case
-            try {
-                int num = this.getFilesDir().listFiles().length;
-                ct.SaveData(this, sg, Integer.toString(num)+".dat");
-            } catch (IOException e) {
-                throw new RuntimeException(e.getMessage());
-            }
+        //Todo: elroee explain why  myTimeReceive!=null
+        if(myTimeReceive!=null) {
+            time =  myTimeReceive.getSeconds();
+
+            //if there is a broadcastRecevier unregister it
+            unregisterReceiver(myTimeReceive);
+        }
+        if(timer!=null) {
+            timer.cancel();
         }
 
+        //Todo: change to general case
+        try {
+
+            SavedGame sg = new SavedGame(board, timerStatus, randomStatus, time, fileName);
+            ct.SaveData(this, sg, fileName);
+            Log.i("GameActictivity.onDestroy", "filename2: " + fileName);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+       if(board.checkWin() == true && fileName != null){
+
+            ct.deleteSave(this, fileName);
+        }
     }
     @Override
     public void onSaveInstanceState(Bundle outState)
@@ -278,8 +305,10 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
     @Override
     public void endGame() {
         Log.i("elro","game ended");
-        this.getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        //Todo: check with elroee
+        /*this.getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         Intent intent = new Intent(this,MainActivity.class);
-        startActivity(intent);
+        startActivity(intent);*/
+        finish();
     }
 }

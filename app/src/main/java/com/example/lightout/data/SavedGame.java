@@ -12,18 +12,17 @@ public class SavedGame implements Serializable {
 
 
     private long Second;
-    boolean isTimed, isRandom;
+    private boolean isTimed, isRandom;
+    private String fileName;
 
-    public SavedGame(Board board, long Second) {
-        this.board = board;
-        this.Second = Second;
-    }
-    public SavedGame(Board board, boolean isTimed, boolean isRandom, long Second) {
+    public SavedGame(Board board, boolean isTimed, boolean isRandom, long Second, String fileName) {
         this.board = board;
         this.Second = Second;
         this.isTimed = isTimed;
         this.isRandom = isRandom;
+        this.fileName = fileName;
     }
+
 
     public Board getBoard() {
         return board;
@@ -38,5 +37,8 @@ public class SavedGame implements Serializable {
     }
     public long getSecond() {
         return Second;
+    }
+    public String getFileName() {
+        return fileName;
     }
 }

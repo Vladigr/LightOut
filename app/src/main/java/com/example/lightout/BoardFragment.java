@@ -42,7 +42,7 @@ public class BoardFragment extends Fragment implements Observer {
     public interface BoardListener {
         void won();
 
-        void boardFragOnDestroy(Board board);
+        void boardFragOnPause(Board board);
     }
 
     @Override
@@ -61,10 +61,15 @@ public class BoardFragment extends Fragment implements Observer {
 
     @Override
     public void onDestroy() {
-        if (board.checkWin() == false) {
-            listener.boardFragOnDestroy(board);
-        }
+        Log.i("BoardGame.state", "BoardGame.onDestroy");
         super.onDestroy();
+    }
+
+    @Override
+    public void onPause() {
+        Log.i("BoardGame.state", "BoardGame.onPause");
+        listener.boardFragOnPause(board);
+        super.onPause();
     }
 
     public BoardFragment() {
