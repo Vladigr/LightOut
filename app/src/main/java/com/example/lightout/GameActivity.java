@@ -304,8 +304,8 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
     public void restartGame() {
         Log.i("elro","game restarts");
 
-        Board newBoard = new Board(originalBoard);
-        Log.i("lightout-GameActivity", "board size: " + newBoard.getSize());
+        this.board = new Board(originalBoard);
+        Log.i("lightout-GameActivity", "board size: " + this.board.getSize());
         if(timerStatus==false)
         {
             txtTimeLeft.setText("--:--");
@@ -320,7 +320,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         }
         flagRestart=true;
         //creating the new fragment based on the original board that started the game
-        Fragment frag = BoardFragment.newInstance(newBoard);
+        Fragment frag = BoardFragment.newInstance(this.board);
         FragmentTransaction tran = getSupportFragmentManager().beginTransaction();
         tran.replace(R.id.fragment_container_game_board, frag);
         tran.commit();
