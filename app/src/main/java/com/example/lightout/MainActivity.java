@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements FragmentListener,
                     .replace(R.id.fragContainer, NewGameSetup.class, null,"NewGameSetup")
                     .addToBackStack("NewGameSetup")
                     .commit();
+            ///
         }
     }
 
