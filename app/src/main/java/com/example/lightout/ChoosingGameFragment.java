@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,10 +30,17 @@ public class ChoosingGameFragment extends Fragment  implements View.OnClickListe
         super.onAttach(context);
     }
 
+    @Override
+    public void onResume() {
+        Log.i("myDebug","ChoosingGameFragment::onResume()");
+        super.onResume();
+        if(myGameAdapter!=null)
+            myGameAdapter.notifyDataSetChanged();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
+        Log.i("myDebug","ChoosingGameFragment::onCreate()");
         super.onCreate(savedInstanceState);
         myGameAdapter = new ChooseGameAdapter(getActivity(),this);
 
