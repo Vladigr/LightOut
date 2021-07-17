@@ -33,6 +33,7 @@ public class ChoosingGameFragment extends Fragment  implements View.OnClickListe
     @Override
     public void onResume() {
         Log.i("myDebug","ChoosingGameFragment::onResume()");
+        myGameAdapter.updateFileNameArr(getContext());
         super.onResume();
         if(myGameAdapter!=null)
             myGameAdapter.notifyDataSetChanged();
