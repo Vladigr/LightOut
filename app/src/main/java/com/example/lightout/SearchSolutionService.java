@@ -121,6 +121,7 @@ public class SearchSolutionService extends Service {
                     .setContentTitle("Board Solved!")
                     .setSmallIcon(R.drawable.ic_baseline_check_24)
                     .setContentIntent(pendingIntent)
+                    .setAutoCancel(true)
                     .build();
 
             //Toast.makeText(getApplicationContext(),"sending to back",Toast.LENGTH_LONG).show();

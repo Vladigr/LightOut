@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -102,6 +103,8 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         if((isMainActivity==false) && (isSolution==true))
         {
             txtTimeLeft.setText("--:--");
+
+
             Log.i("newElro","going for solution, solution"+getIntent().getStringExtra(SearchSolutionService.MSG_KEY));
             //get solved board
            // Toast.makeText(this, "press the green button from bottom right to bottom left and to the top",Toast.LENGTH_LONG).show();
