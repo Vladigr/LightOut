@@ -40,18 +40,25 @@ public class Board extends Subject implements Serializable {
     public Board(int size, boolean isRandom){
         this.size = size;
         state = new boolean[size][size];
+        Observer temp = observer;
+        observer = new NullObserver();
         if (isRandom == false){
             lightAll(size);
         }else {
             Random rand = new Random();
+            for (int i = 0; i < state.length; ++i) {
+                for (int j = 0; j < state[0].length; ++j) {
+                    if(rand.nextBoolean()) makeMove(i,j);
+                }
+            }
             lightedNum = 0;
             for (int i = 0; i < state.length; ++i) {
                 for (int j = 0; j < state[0].length; ++j) {
-                    state[i][j] = rand.nextBoolean();
                     if (state[i][j]) ++lightedNum;
                 }
             }
         }
+        observer = temp;
     }
 
     public Board(boolean state[][]){
