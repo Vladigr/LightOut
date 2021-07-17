@@ -121,9 +121,6 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
                     ((BoardFragment) frag).drawSolution(solPoints);
                 }
             }).commit();
-
-
-
         }
 
 
