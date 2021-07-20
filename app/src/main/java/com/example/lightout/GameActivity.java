@@ -52,6 +52,8 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
     private boolean flagRestart=false;
 
 
+
+
     private TextView txtTimeLeft;
 
 
@@ -257,8 +259,8 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         timer.scheduleAtFixedRate(timerTask, 1000, 1000);
 
         //creating a timer reciver for 90 seconds
-        //myTimeReceive =new TimerBroadcastReceiver(seconds,this);
-        myTimeReceive =new TimerBroadcastReceiver(10,this);
+        myTimeReceive =new TimerBroadcastReceiver(seconds,this);
+        //myTimeReceive =new TimerBroadcastReceiver(5,this);
         //adding the filter action for the reciver
         IntentFilter filter = new IntentFilter("com.example.lightout.TICK");
         registerReceiver(myTimeReceive,filter);
@@ -333,6 +335,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         /*this.getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         Intent intent = new Intent(this,MainActivity.class);
         startActivity(intent);*/
+        board.setWin();
         finish();
     }
     @Override
