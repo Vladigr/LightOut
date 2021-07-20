@@ -187,19 +187,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
             ct.deleteSave(this, fileName);
         }
     }
-    @Override
-    public void onSaveInstanceState(Bundle outState)
-    {
-        //---save whatever you need to persist—
-        super.onSaveInstanceState(outState);
-    }
 
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState)
-    {
-        super.onRestoreInstanceState(savedInstanceState);
-        //---retrieve the information persisted earlier---
-    }
 
 
     private void startTimer(long seconds){
@@ -308,6 +296,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         (new CareTakerSave()).deleteSave(this,fileName);
         finish();
     }
+
 
     public interface StarGame{ //interface for starting the game via the main activity
         public void GAStartGame(SavedGame sg);
