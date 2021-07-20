@@ -76,7 +76,8 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
                 txtTimeLeft.setText("--:--");
             }
             else{
-                startTimer(secondsLeft=(long) getIntent().getSerializableExtra(MainActivity.secondsKey));
+                secondsLeft=(long) getIntent().getSerializableExtra(MainActivity.secondsKey);
+                startTimer(secondsLeft);
             }
 
         fileName = (String) getIntent().getSerializableExtra(MainActivity.fileNameKey);
@@ -218,7 +219,6 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
             flagRestart=false;
 
        if(board.checkWin() == true && fileName != null){
-
             ct.deleteSave(this, fileName);
         }
     }
@@ -258,7 +258,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
 
         //creating a timer reciver for 90 seconds
         //myTimeReceive =new TimerBroadcastReceiver(seconds,this);
-        myTimeReceive =new TimerBroadcastReceiver(5,this);
+        myTimeReceive =new TimerBroadcastReceiver(10,this);
         //adding the filter action for the reciver
         IntentFilter filter = new IntentFilter("com.example.lightout.TICK");
         registerReceiver(myTimeReceive,filter);
