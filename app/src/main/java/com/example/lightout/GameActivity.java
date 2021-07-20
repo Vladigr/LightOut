@@ -49,6 +49,9 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
     boolean randomStatus=false;
     long secondsLeft=0;
     private String fileName;
+    private boolean flagRestart=false;
+
+
 
 
     private TextView txtTimeLeft;
@@ -75,7 +78,8 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
                 txtTimeLeft.setText("--:--");
             }
             else{
-                startTimer(secondsLeft=(long) getIntent().getSerializableExtra(MainActivity.secondsKey));
+                secondsLeft=(long) getIntent().getSerializableExtra(MainActivity.secondsKey);
+                startTimer(secondsLeft);
             }
 
         fileName = (String) getIntent().getSerializableExtra(MainActivity.fileNameKey);
@@ -190,29 +194,33 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         long time = -1;
         Log.i("elro","GameActictivity.boardFragOnPause");
         //Log.i("GameActictivity.onDestroy", String.valueOf(getFilesDir()));
-        //Todo: elroee explain why  myTimeReceive!=null
-        if(myTimeReceive!=null) {
-            time =  myTimeReceive.getSeconds();
 
-            //if there is a broadcastRecevier unregister it
-            unregisterReceiver(myTimeReceive);
-        }
-        if(timer!=null) {
-            timer.cancel();
-        }
+        if(flagRestart==false) {
+            //Todo: elroee explain why  myTimeReceive!=null
+            if (myTimeReceive != null) {
+                time = myTimeReceive.getSeconds();
 
-        //Todo: change to general case
-        try {
+                //if there is a broadcastRecevier unregister it
+                unregisterReceiver(myTimeReceive);
+            }
+            if (timer != null) {
+                timer.cancel();
+            }
 
-            SavedGame sg = new SavedGame(board, timerStatus, randomStatus, time, fileName);
-            ct.SaveData(this, sg, fileName);
-            Log.i("GameActictivity.onDestroy", "filename2: " + fileName);
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
+            //Todo: change to general case
+            try {
+
+                SavedGame sg = new SavedGame(this.board, timerStatus, randomStatus, time, fileName);
+                ct.SaveData(this, sg, fileName);
+                Log.i("GameActictivity.onDestroy", "filename2: " + fileName);
+            } catch (IOException e) {
+                throw new RuntimeException(e.getMessage());
+            }
         }
+        else
+            flagRestart=false;
 
        if(board.checkWin() == true && fileName != null){
-
             ct.deleteSave(this, fileName);
         }
     }
@@ -251,8 +259,8 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         timer.scheduleAtFixedRate(timerTask, 1000, 1000);
 
         //creating a timer reciver for 90 seconds
-        //myTimeReceive =new TimerBroadcastReceiver(seconds,this);
-        myTimeReceive =new TimerBroadcastReceiver(5,this);
+        myTimeReceive =new TimerBroadcastReceiver(seconds,this);
+        //myTimeReceive =new TimerBroadcastReceiver(5,this);
         //adding the filter action for the reciver
         IntentFilter filter = new IntentFilter("com.example.lightout.TICK");
         registerReceiver(myTimeReceive,filter);
@@ -269,6 +277,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         FragmentManager fm = getSupportFragmentManager();
         WinLoseDialog alertDialog = WinLoseDialog.newInstance("Defeat");
         alertDialog.connectGameInterface(this);
+        alertDialog.setCancelable(false);
         alertDialog.show(fm, "fragment_alert");
     }
 
@@ -287,6 +296,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         FragmentManager fm = getSupportFragmentManager();
         WinLoseDialog alertDialog = WinLoseDialog.newInstance("You Are Victorious");
         alertDialog.connectGameInterface(this);
+        alertDialog.setCancelable(false);
         alertDialog.show(fm, "fragment_alert");
     }
 
@@ -296,8 +306,8 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
     public void restartGame() {
         Log.i("elro","game restarts");
 
-        Board newBoard = new Board(originalBoard);
-        Log.i("lightout-GameActivity", "board size: " + newBoard.getSize());
+        this.board = new Board(originalBoard);
+        Log.i("lightout-GameActivity", "board size: " + this.board.getSize());
         if(timerStatus==false)
         {
             txtTimeLeft.setText("--:--");
@@ -310,8 +320,9 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
                 startTimer(secondsLeft=(long) getIntent().getSerializableExtra(MainActivity.secondsKey));
             }
         }
+        flagRestart=true;
         //creating the new fragment based on the original board that started the game
-        Fragment frag = BoardFragment.newInstance(newBoard);
+        Fragment frag = BoardFragment.newInstance(this.board);
         FragmentTransaction tran = getSupportFragmentManager().beginTransaction();
         tran.replace(R.id.fragment_container_game_board, frag);
         tran.commit();
@@ -324,6 +335,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         /*this.getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         Intent intent = new Intent(this,MainActivity.class);
         startActivity(intent);*/
+        board.setWin();
         finish();
     }
     @Override

@@ -93,6 +93,11 @@ public class Board extends Subject implements Serializable {
         return lightedNum == 0;
     }
 
+    public void setWin()
+    {
+        lightedNum=0;
+    }
+
     private void UpdateElementInMatrix(int i, int j){
         if(i > -1 && i < size && j > -1 && j < size ){
             state[i][j] = !state[i][j];

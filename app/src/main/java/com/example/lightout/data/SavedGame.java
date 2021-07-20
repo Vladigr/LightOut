@@ -17,7 +17,10 @@ public class SavedGame implements Serializable {
 
     public SavedGame(Board board, boolean isTimed, boolean isRandom, long Second, String fileName) {
         this.board = board;
-        this.Second = Second;
+        if(Second<5)
+            this.Second=5;
+        else
+            this.Second = Second;
         this.isTimed = isTimed;
         this.isRandom = isRandom;
         this.fileName = fileName;
