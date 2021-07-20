@@ -10,8 +10,9 @@ import android.widget.TableRow;
 
 import androidx.annotation.NonNull;
 
+//TableButtnon : Regular button with its indexes to the board
 public class TableButton extends androidx.appcompat.widget.AppCompatButton {
-    private final int dpPixelValue=70;
+    private final int dpPixelValue=60;
     public int getI() {
         return i;
     }

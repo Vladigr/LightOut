@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+//CareTakerSave : class which manage all the savedGames
 public class CareTakerSave {
 
     public SavedGame getSave(Context context, String fileName) throws IOException, ClassNotFoundException {

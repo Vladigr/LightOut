@@ -31,30 +31,24 @@ import java.util.TimerTask;
 public class GameActivity extends AppCompatActivity implements TimerBroadcastReceiver.ListenForTimer ,BoardFragment.BoardListener,GameInterface{
     public static final String MAIN_TYPE="MainActivity";
     public static final String SOLUTION_TYPE="solutionFound";
-
-    public interface StarGame{ //interface for starting the game via the main activity
-        public void startGame(SavedGame sg);
-    }
     //our broadcastRecevier
     private  TimerBroadcastReceiver myTimeReceive =null;
     //the original board
     private Board originalBoard;
-
     //handler for counting down a second
     final Handler handler = new Handler();
     //a timer for the cound down
     private Timer timer;
+
     private Board board;
     boolean timerStatus=false;
     boolean randomStatus=false;
     long secondsLeft=0;
     private String fileName;
     private boolean flagRestart=false;
-
-
-
-
     private TextView txtTimeLeft;
+    private   boolean isMainActivity;
+    private boolean isSolution;
 
 
     @Override
@@ -64,15 +58,16 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         Log.i("gameActivity","Game Create");
         txtTimeLeft=(TextView) findViewById(R.id.txtTimeLeft);
 
-        boolean isMainActivity = getIntent().getBooleanExtra(MAIN_TYPE,false);
-        boolean isSolution = getIntent().getBooleanExtra(SOLUTION_TYPE,false);
-
+        isMainActivity = getIntent().getBooleanExtra(MAIN_TYPE,false);
+        isSolution = getIntent().getBooleanExtra(SOLUTION_TYPE,false);
 
         if((isMainActivity==true) && (isSolution==false))
         {
             Toast.makeText(this,"is Main",Toast.LENGTH_LONG);
+            //get check parameters
             timerStatus = (boolean) getIntent().getSerializableExtra(MainActivity.timerKey);
             randomStatus = (boolean) getIntent().getSerializableExtra(MainActivity.randomKey);
+
             if(timerStatus==false)
             {
                 txtTimeLeft.setText("--:--");
@@ -82,33 +77,29 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
                 startTimer(secondsLeft);
             }
 
-        fileName = (String) getIntent().getSerializableExtra(MainActivity.fileNameKey);
-        // must be here because pause can be invoke many times without any name
-        if(fileName == null){
-            int num = this.getFilesDir().listFiles().length;
-            fileName = Integer.toString(num) + ".dat";
-            getIntent().putExtra(MainActivity.fileNameKey, fileName);
+             fileName = (String) getIntent().getSerializableExtra(MainActivity.fileNameKey);
+             // must be here because pause can be invoke many times without any name
+             if(fileName == null){
+                   int num = this.getFilesDir().listFiles().length;
+                   fileName = Integer.toString(num) + ".dat";
+                   getIntent().putExtra(MainActivity.fileNameKey, fileName);
+             }
+             board = (Board) getIntent().getSerializableExtra(BoardFragment.boardBundleKey);
+             originalBoard= new Board(board);
+             Log.i("lightout-GameActivity", "board size: " + board.getSize());
+             board = (Board) getIntent().getSerializableExtra(BoardFragment.boardBundleKey);
+             originalBoard= new Board(board);
+             Log.i("lightout-GameActivity", "board size: " + board.getSize());
+             Fragment frag = BoardFragment.newInstance(board);
+             FragmentTransaction tran = getSupportFragmentManager().beginTransaction();
+             tran.replace(R.id.fragment_container_game_board, frag);
+             tran.commit();
         }
 
-        board = (Board) getIntent().getSerializableExtra(BoardFragment.boardBundleKey);
-        originalBoard= new Board(board);
-        Log.i("lightout-GameActivity", "board size: " + board.getSize());
-            board = (Board) getIntent().getSerializableExtra(BoardFragment.boardBundleKey);
-            originalBoard= new Board(board);
-            Log.i("lightout-GameActivity", "board size: " + board.getSize());
-            Fragment frag = BoardFragment.newInstance(board);
-            FragmentTransaction tran = getSupportFragmentManager().beginTransaction();
-            tran.replace(R.id.fragment_container_game_board, frag);
-            tran.commit();
-
-
-
-        }
+        //if the service called the GameActivity
         if((isMainActivity==false) && (isSolution==true))
         {
             txtTimeLeft.setText("--:--");
-
-
             Log.i("newElro","going for solution, solution"+getIntent().getStringExtra(SearchSolutionService.MSG_KEY));
             //get solved board
             Toast.makeText(this, "press the green button from bottom right to bottom left and to the top",Toast.LENGTH_LONG).show();
@@ -131,11 +122,10 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         }
     }
 
+    //build the action bar menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         return super.onCreateOptionsMenu(menu);
-
     }
 
     @Override
@@ -154,40 +144,12 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         super.onPause();
         Log.i("gameActivity","Game Pause");
         //if there is a broadcast pause the countdown
-        if(myTimeReceive !=null)
+        if(myTimeReceive !=null && !isSolution)
         {
             myTimeReceive.setPause();
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        /*
-        Log.i("gameActivity","GameActivity::onDestroy()");
-
-        long time =0;
-        if(myTimeReceive!=null) {
-            time =  myTimeReceive.getSeconds();
-
-            //if there is a broadcastRecevier unregister it
-            unregisterReceiver(myTimeReceive);
-        }
-        if(timer!=null) {
-            timer.cancel();
-        }
-
-        CareTakerSave ct = new CareTakerSave();
-        SavedGame sg = new SavedGame(board, timerStatus, randomStatus, time, fileName);
-        //Todo: change to general case
-        try {
-            int num = this.getFilesDir().listFiles().length;
-            ct.SaveData(this, sg, Integer.toString(num)+".dat");
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
-        }*/
-
-    }
     @Override
     public void boardFragOnPause(Board board) {
         CareTakerSave ct = new CareTakerSave();
@@ -211,7 +173,8 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
             try {
 
                 SavedGame sg = new SavedGame(this.board, timerStatus, randomStatus, time, fileName);
-                ct.SaveData(this, sg, fileName);
+                if(!isSolution)
+                     ct.SaveData(this, sg, fileName);
                 Log.i("GameActictivity.onDestroy", "filename2: " + fileName);
             } catch (IOException e) {
                 throw new RuntimeException(e.getMessage());
@@ -256,11 +219,11 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         };
         // every 1 seconds.
         timer = new Timer(false);
+        //creating a timer reciver for 90 seconds
+        //myTimeReceive =new TimerBroadcastReceiver(5,this);
+        myTimeReceive =new TimerBroadcastReceiver(seconds,this);
         timer.scheduleAtFixedRate(timerTask, 1000, 1000);
 
-        //creating a timer reciver for 90 seconds
-        myTimeReceive =new TimerBroadcastReceiver(seconds,this);
-        //myTimeReceive =new TimerBroadcastReceiver(5,this);
         //adding the filter action for the reciver
         IntentFilter filter = new IntentFilter("com.example.lightout.TICK");
         registerReceiver(myTimeReceive,filter);
@@ -344,5 +307,9 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         Log.i("endOnSolve","GameActivity::endOnSolve");
         (new CareTakerSave()).deleteSave(this,fileName);
         finish();
+    }
+
+    public interface StarGame{ //interface for starting the game via the main activity
+        public void GAStartGame(SavedGame sg);
     }
 }

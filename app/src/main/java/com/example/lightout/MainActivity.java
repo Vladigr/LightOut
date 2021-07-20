@@ -33,7 +33,10 @@ public class MainActivity extends AppCompatActivity implements FragmentListener,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         fragContainer = (ConstraintLayout) findViewById(R.id.fragContainer);
+
+        //savedInstanceState is null only when the activity is first load
         if (savedInstanceState == null) {
+            //get the "play" button fragment and put it dynamically
             getSupportFragmentManager().beginTransaction()
                     .setReorderingAllowed(true)
                     .add(R.id.fragContainer, MainMenuFragment.class, null, "MainMenuFragment")
@@ -47,56 +50,72 @@ public class MainActivity extends AppCompatActivity implements FragmentListener,
     }
 
     @Override
-    public void OnClickEvent(Fragment fragment) {
-        if(fragment==null) //if null found, do nothing
+    public void FLOnClickMoveToNextFragment(Fragment fragment) {
+        //if null found, do nothing
+        if(fragment==null)
             return;
 
         //changing to the next fragment
         if(fragment instanceof MainMenuFragment){ // if the clicked happed in the MainMEnuFragment ("play" button clicked)
+
+            //move to ChoosingGameFragment
             getSupportFragmentManager().beginTransaction()
                     .setReorderingAllowed(true)
                     .replace(R.id.fragContainer, ChoosingGameFragment.class, null,"ChoosingGameFragment")
-                    .addToBackStack("ChoosingGameFragment")
+                    .addToBackStack("MainMenuFragment")
                     .commit();
 
         }
         else if(fragment instanceof ChoosingGameFragment)
         {
+            //move to NewGameSetup
             getSupportFragmentManager().beginTransaction()
                     .setReorderingAllowed(true)
                     .replace(R.id.fragContainer, NewGameSetup.class, null,"NewGameSetup")
-                    .addToBackStack("NewGameSetup")
+                    .addToBackStack("ChoosingGameFragment")
                     .commit();
             ///
         }
     }
 
+    /* TODO:Remove this
     private void startGameDemo(){
         Intent intent = new Intent(this,GameActivity.class);
         intent.putExtra(BoardFragment.boardBundleKey, new Board(4));
         startActivity(intent);
     }
+    */
 
 
+
+    //start the GameActivity with the required SavedGame
     @Override
-    public void startGame(SavedGame sg) {
+    public void GAStartGame(SavedGame sg) {
+        //to start the GameActivity
         Intent intent = new Intent(this,GameActivity.class);
+        //set call type for the game
         intent.putExtra(GameActivity.SOLUTION_TYPE,false);
         intent.putExtra(GameActivity.MAIN_TYPE,true);
+        //send the desired board
         intent.putExtra(BoardFragment.boardBundleKey,sg.getBoard());
+        //set the game parameters
         intent.putExtra(MainActivity.timerKey,sg.isTimed());
         intent.putExtra(MainActivity.randomKey,sg.isRandom());
         intent.putExtra(MainActivity.secondsKey,sg.getSecond());
+        //send the file name to further savings
         intent.putExtra(MainActivity.fileNameKey,sg.getFileName());
         startActivity(intent);
     }
 
+
+    //creating the menu of action bar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         this.getMenuInflater().inflate(R.menu.main_activity_menu,menu);
         return super.onCreateOptionsMenu(menu);
     }
 
+    //when item of the menu bar is clicked
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {

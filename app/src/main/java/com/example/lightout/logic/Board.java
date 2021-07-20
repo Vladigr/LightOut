@@ -9,6 +9,7 @@ import java.util.Random;
 import static java.lang.Math.pow;
 import static java.lang.Math.random;
 
+//Board : logic representation of the current board
 public class Board extends Subject implements Serializable {
     private boolean state[][];  //pivoted matrix
     public boolean[][] getBoard(){return state;}

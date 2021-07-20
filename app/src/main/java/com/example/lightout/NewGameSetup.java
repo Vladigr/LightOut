@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.example.lightout.data.SavedGame;
@@ -75,7 +74,7 @@ public class NewGameSetup extends Fragment {
         //do things here
         Board board = new Board(size, cboxRandomMode.isChecked());
         SavedGame sg = new SavedGame(board,cboxTimerMode.isChecked(),cboxRandomMode.isChecked(),100, null);
-        listener.startGame(sg);
+        listener.GAStartGame(sg);
 
     }
 

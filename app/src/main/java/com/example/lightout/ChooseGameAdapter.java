@@ -19,16 +19,13 @@ import java.util.ArrayList;
 
 
 public class ChooseGameAdapter extends RecyclerView.Adapter<ChooseGameAdapter.ViewHolder>{
-    private String[] fileName;
-    private GameActivity.StarGame listener;
-    private IChooseGameAdapter adapterListener;
+    private String[] fileNameArray;
+    private GameActivity.StarGame startGameListener;
 
-    public ChooseGameAdapter(Context context,IChooseGameAdapter adapterListener) {
+    public ChooseGameAdapter(Context context) {
         updateFileNameArr(context);
-        this.adapterListener=adapterListener;
-
         try{
-            this.listener = (GameActivity.StarGame)context;
+            this.startGameListener = (GameActivity.StarGame)context;
 
         }catch(ClassCastException e){
             throw new ClassCastException("the class " +
@@ -37,26 +34,18 @@ public class ChooseGameAdapter extends RecyclerView.Adapter<ChooseGameAdapter.Vi
         }
     }
 
-    public void updateFileNameArr(Context context){
-        ArrayList<String> fileNameList = new ArrayList<>();
-        File[] fileList = context.getFilesDir().listFiles();
-        for( File file : fileList){
-            fileNameList.add(file.getName());
-        }
-        fileName = new String[fileNameList.size()];
-        this.fileName = fileNameList.toArray(fileName);
+    @Override
+    public int getItemCount() {
+        return fileNameArray.length;
     }
-
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-
         // Inflate the custom layout
         View gameView = inflater.inflate(R.layout.game_row, parent, false);
-
         // Return a new holder instance
         return new ViewHolder(gameView, this);
     }
@@ -67,21 +56,13 @@ public class ChooseGameAdapter extends RecyclerView.Adapter<ChooseGameAdapter.Vi
         holder.bindData(position);
     }
 
-    @Override
-    public int getItemCount() {
-        return fileName.length;
-    }
-
-
-
-
     public class ViewHolder extends RecyclerView.ViewHolder {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         private TextView txtIndexRow;
         private TextView txtDataOfGame;
         private View itemView;
-        RecyclerView.Adapter<ChooseGameAdapter.ViewHolder> adapter;
+        private RecyclerView.Adapter<ChooseGameAdapter.ViewHolder> adapter;
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
         public ViewHolder(View itemView , RecyclerView.Adapter<ChooseGameAdapter.ViewHolder> adapter) {
@@ -95,30 +76,29 @@ public class ChooseGameAdapter extends RecyclerView.Adapter<ChooseGameAdapter.Vi
 
         public void bindData(int position){
             txtIndexRow.setText(""+position);
-            txtDataOfGame.setText("Info: "+ fileName[position]);
+            txtDataOfGame.setText("Info: "+ fileNameArray[position]);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     try {
-                        SavedGame sg = (new CareTakerSave()).getSave(v.getContext(), fileName[position]);
-                        listener.startGame(sg);
+                        SavedGame sg = (new CareTakerSave()).getSave(v.getContext(), fileNameArray[position]);
+                        startGameListener.GAStartGame(sg);
                     } catch (IOException e) {
                         e.printStackTrace();
                     } catch (ClassNotFoundException e) {
                         throw new RuntimeException(e.getMessage());
                     }
-                    Log.i("elro", fileName[position]);
+                    Log.i("elro", fileNameArray[position]);
                 }
             });
 
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                  new CareTakerSave().deleteSave(v.getContext(), fileName[position]);
+                  new CareTakerSave().deleteSave(v.getContext(), fileNameArray[position]);
                   updateFileNameArr(v.getContext());
                   //refresh the adapter to remove the removed button
-                  adapterListener.refreshAdapter();
-
+                  adapter.notifyDataSetChanged();
                   return true;
                 }
             });
@@ -126,8 +106,14 @@ public class ChooseGameAdapter extends RecyclerView.Adapter<ChooseGameAdapter.Vi
         }
     }
 
-    //interface to update the adapter from the fragment
-    public interface IChooseGameAdapter{
-        public void refreshAdapter();
+    public void updateFileNameArr(Context context){
+        ArrayList<String> fileNameList = new ArrayList<>();
+        File[] fileList = context.getFilesDir().listFiles();
+        for( File file : fileList){
+            fileNameList.add(file.getName());
+        }
+        fileNameArray = new String[fileNameList.size()];
+        this.fileNameArray = fileNameList.toArray(fileNameArray);
     }
+
 }

@@ -13,8 +13,8 @@ public class TimerBroadcastReceiver extends BroadcastReceiver {
     private long timeLeftInSeconds;
     //a flag for detrming pausing the count or not
     private boolean pause;
-    //the acrivity that will use this broadcastReceiver
-    private ListenForTimer listener;
+    //the activity that will use this broadcastReceiver
+    private ListenForTimer listener; // GameActivity
 
     TimerBroadcastReceiver(long timeLeftInSeconds,ListenForTimer listener)
     {
@@ -40,7 +40,6 @@ public class TimerBroadcastReceiver extends BroadcastReceiver {
            // else
                 //Toast.makeText(context,"paused",Toast.LENGTH_SHORT).show();
         }
-
     }
     public void setResume(){
         pause=false;

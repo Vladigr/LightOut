@@ -9,11 +9,12 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
-public class MainMenuFragment extends Fragment implements View.OnClickListener {
+public class MainMenuFragment extends Fragment{
     private FragmentListener listener; //MainActivity will listen to the click event of the "play" button
 
+
+    //onAttach : attaching the fragment to an activity
     @Override
     public void onAttach(@NonNull Context context) {
         try{
@@ -25,6 +26,7 @@ public class MainMenuFragment extends Fragment implements View.OnClickListener {
         }
         super.onAttach(context);
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,15 +42,12 @@ public class MainMenuFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        view.findViewById(R.id.btnPlay).setOnClickListener(this);
+        view.findViewById(R.id.btnPlay).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.FLOnClickMoveToNextFragment(MainMenuFragment.this);
+            }
+        });
         super.onViewCreated(view, savedInstanceState);
     }
-
-    @Override
-    public void onClick(View v) {
-        listener.OnClickEvent(this);
-    }
-
-
-
 }
