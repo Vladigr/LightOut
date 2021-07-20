@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity implements FragmentListener,
             getSupportFragmentManager().beginTransaction()
                     .setReorderingAllowed(true)
                     .add(R.id.fragContainer, MainMenuFragment.class, null, "MainMenuFragment")
-                    .addToBackStack("MainMenuFragment")
                     .commit();
         }
     }

@@ -145,6 +145,8 @@ public class Board extends Subject implements Serializable {
                     '>';
         }
     }
+
+    //solve the board (wrapper for the recSolve)
     public ArrayList<SolPoints> solve(){
         Observer saveObserver = observer;
         observer = new NullObserver();
@@ -153,6 +155,8 @@ public class Board extends Subject implements Serializable {
         return res;
     }
 
+
+    //recSolve: recursive function to search for solution
     private ArrayList<SolPoints> recSolve(int n){
         if (n==-1){
             if(checkWin() == true) return new ArrayList<>();
