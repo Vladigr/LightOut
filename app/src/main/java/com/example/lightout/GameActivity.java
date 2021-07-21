@@ -79,12 +79,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
 
 
              fileName = (String) getIntent().getSerializableExtra(MainActivity.fileNameKey);
-             // must be here because pause can be invoke many times without any name
-             if(fileName == null){
-                   int num = this.getFilesDir().listFiles().length;
-                   fileName = Integer.toString(num) + ".dat";
-                   getIntent().putExtra(MainActivity.fileNameKey, fileName);
-             }
+
              board = (Board) getIntent().getSerializableExtra(BoardFragment.boardBundleKey);
              originalBoard= new Board(board);
              Log.i("lightout-GameActivity", "board size: " + board.getSize());

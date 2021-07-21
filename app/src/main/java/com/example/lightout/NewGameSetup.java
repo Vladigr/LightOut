@@ -16,6 +16,8 @@ import android.widget.Toast;
 import com.example.lightout.data.SavedGame;
 import com.example.lightout.logic.Board;
 
+import java.io.File;
+
 //setup the board of the game
 public class NewGameSetup extends Fragment {
     private GameActivity.StarGame listener;
@@ -73,7 +75,14 @@ public class NewGameSetup extends Fragment {
         Toast.makeText(getActivity(),"The size is = "+size+" Random = "+cboxRandomMode.isChecked()+" Timer = "+cboxTimerMode.isChecked(),Toast.LENGTH_SHORT).show();
         //do things here
         Board board = new Board(size, cboxRandomMode.isChecked());
-        SavedGame sg = new SavedGame(board,cboxTimerMode.isChecked(),cboxRandomMode.isChecked(),100, null);
+        int num=0;
+        File file = new File(getContext().getFilesDir(), num+".dat");
+        //look for another name
+        while( file.exists()){
+            ++num;
+            file = new File(getContext().getFilesDir(), num+".dat");
+        }
+        SavedGame sg = new SavedGame(board,cboxTimerMode.isChecked(),cboxRandomMode.isChecked(),100, num+".dat");
         listener.GAStartGame(sg);
 
     }

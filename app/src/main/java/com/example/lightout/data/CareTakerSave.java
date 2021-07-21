@@ -24,18 +24,14 @@ public class CareTakerSave {
     }
 
     public void SaveData(Context context, SavedGame sg, String fileName) throws IOException {
-        int num = Integer.parseInt(fileName.split("\\.")[0]);
-        Log.i("banana",""+num);
         Log.i("caretaker.save", "check sg null : "  + Boolean.toString(sg == null) );
         Log.i("caretaker.save", "check board null : "  + Boolean.toString(sg.getBoard() == null) );
         if(sg != null && sg.getBoard() != null && sg.getBoard().checkWin() != true) {
             File file = new File(context.getFilesDir(), fileName);
-            //look for another name
-            while( file.exists()){
-                ++num;
-                file = new File(context.getFilesDir(), num+".dat");
+            if( file.exists()){
+                deleteSave(context,fileName);
             }
-            ///
+
             Log.i("CareTaker.SaveData", context.getFilesDir().toString());
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
             out.writeObject(sg);
