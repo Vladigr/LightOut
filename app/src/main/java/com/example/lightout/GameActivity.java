@@ -77,6 +77,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
                 startTimer(secondsLeft);
             }
 
+
              fileName = (String) getIntent().getSerializableExtra(MainActivity.fileNameKey);
              // must be here because pause can be invoke many times without any name
              if(fileName == null){
