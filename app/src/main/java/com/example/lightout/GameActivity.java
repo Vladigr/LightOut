@@ -100,6 +100,9 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         if((isMainActivity==false) && (isSolution==true))
         {
             txtTimeLeft.setText("--:--");
+            NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(this.NOTIFICATION_SERVICE);
+            notificationManager.deleteNotificationChannel(SearchSolutionService.CHANNEL_ID);
+
             Log.i("newElro","going for solution, solution"+getIntent().getStringExtra(SearchSolutionService.MSG_KEY));
             //get solved board
             Toast.makeText(this, "press the green button from bottom right to bottom left and to the top",Toast.LENGTH_LONG).show();
@@ -158,7 +161,6 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         //Log.i("GameActictivity.onDestroy", String.valueOf(getFilesDir()));
 
         if(flagRestart==false) {
-            //Todo: elroee explain why  myTimeReceive!=null
             if (myTimeReceive != null) {
                 time = myTimeReceive.getSeconds();
 
@@ -166,12 +168,11 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
                 unregisterReceiver(myTimeReceive);
             }
             if (timer != null) {
+                //stop the timer thread
                 timer.cancel();
             }
 
-            //Todo: change to general case
             try {
-
                 SavedGame sg = new SavedGame(this.board, timerStatus, randomStatus, time, fileName);
                 if(!isSolution)
                      ct.SaveData(this, sg, fileName);
@@ -187,8 +188,6 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
             ct.deleteSave(this, fileName);
         }
     }
-
-
 
     private void startTimer(long seconds){
         //creating a time that will tick every 1 second
@@ -233,8 +232,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
     }
 
     @Override
-    public void getTime(String time) {
-
+    public void updateTimeOnDisplay(String time) {
         this.txtTimeLeft.setText(time);
     }
 

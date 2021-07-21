@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.widget.Toast;
 
 //broadcastReceiver for the timer of the game, every tick will be received and the timer will go
 //down by 1 for every second
@@ -59,7 +58,7 @@ public class TimerBroadcastReceiver extends BroadcastReceiver {
             seconds= timeLeftInSeconds;
         else
             seconds=(timeLeftInSeconds - minutes*60);
-        listener.getTime(""+minutes+" : "+seconds);
+        listener.updateTimeOnDisplay(""+minutes+" : "+seconds);
         Log.i("elro",""+minutes+" : "+seconds);
         if(minutes==0 && seconds==0)
             listener.timerEnded();
@@ -69,7 +68,7 @@ public class TimerBroadcastReceiver extends BroadcastReceiver {
         //when the time ended
         public void timerEnded();
         //get the current time that is left in: "minutes : seconds"
-        public void getTime(String time);
+        public void updateTimeOnDisplay(String time);
     }
 
 

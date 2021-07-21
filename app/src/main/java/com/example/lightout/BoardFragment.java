@@ -233,9 +233,6 @@ public class BoardFragment extends Fragment implements Observer {
         Intent serviceIntent= new Intent( getContext(),SearchSolutionService.class);
         serviceIntent.putExtra(SearchSolutionService.IS_THREAD_KEY,false);
         serviceIntent.putExtra(SearchSolutionService.BOARD_KEY,board);
-
-
-
         getContext().startService(serviceIntent);
     }
 

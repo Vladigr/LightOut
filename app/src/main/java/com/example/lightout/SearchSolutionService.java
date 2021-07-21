@@ -25,6 +25,7 @@ public class SearchSolutionService extends Service {
     public static final String SOLUTION_KEY="solutiongKey";
     public static final String MSG_KEY="msgKey";
     public static final String BOARD_KEY="boardKey";
+    public static final int NOTIFICATION_ID = 1;
 
     private Board mBoard=null;
 
@@ -32,14 +33,7 @@ public class SearchSolutionService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        //creating the notification chanel
-        NotificationChannel serviceChanel = new NotificationChannel(
-                SearchSolutionService.CHANNEL_ID,
-                "Search Solution Serivce",
-                NotificationManager.IMPORTANCE_DEFAULT
-        );
-        NotificationManager manager = getSystemService(NotificationManager.class);
-        manager.createNotificationChannel(serviceChanel);
+
         //adding this chanel in the manifests
     }
 
@@ -67,6 +61,14 @@ public class SearchSolutionService extends Service {
         {
 
             if(myThread==null) {
+                //creating the notification chanel
+                NotificationChannel serviceChanel = new NotificationChannel(
+                        SearchSolutionService.CHANNEL_ID,
+                        "Search Solution Serivce",
+                        NotificationManager.IMPORTANCE_DEFAULT
+                );
+                NotificationManager manager = getSystemService(NotificationManager.class);
+                manager.createNotificationChannel(serviceChanel);
                 mBoard = (Board) intent.getSerializableExtra(BOARD_KEY);
                 notification = new Notification.Builder(this,CHANNEL_ID)
                         .setContentTitle("Searching Solution")
@@ -79,12 +81,12 @@ public class SearchSolutionService extends Service {
 
                         //adding the solve function here
                         ArrayList<Board.SolPoints> solPoints = mBoard.solve();
+                        //for showing that the thread runs
                         try {
                             Thread.sleep(5000);
                         } catch (InterruptedException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
                         }
+
                         Intent serviceIntent = new Intent(getApplicationContext(), SearchSolutionService.class);
                         serviceIntent.putExtra(SearchSolutionService.IS_THREAD_KEY, true);
                         serviceIntent.putExtra(SOLUTION_KEY,solPoints);
@@ -103,6 +105,7 @@ public class SearchSolutionService extends Service {
                     }
                 });
                 myThread.start();
+                startForeground(NOTIFICATION_ID,notification);
             }
         }
         else
@@ -141,13 +144,13 @@ public class SearchSolutionService extends Service {
                         .setAutoCancel(true)
                         .build();
             }
-
+            startForeground(NOTIFICATION_ID,notification);
 
 
             //Toast.makeText(getApplicationContext(),"sending to back",Toast.LENGTH_LONG).show();
 
         }
-        startForeground(1,notification);
+
         return START_NOT_STICKY;
     }
 

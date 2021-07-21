@@ -12,7 +12,9 @@ import androidx.fragment.app.DialogFragment;
 //dialog alert that will alert the user if he won or lost the game
 //also enables it to chhose what to do in the game (reset or end)
 public class WinLoseDialog extends DialogFragment {
+
     private GameInterface gameInterface;
+
     public static WinLoseDialog newInstance(String title){
         WinLoseDialog frag = new WinLoseDialog();
         Bundle args = new Bundle();
