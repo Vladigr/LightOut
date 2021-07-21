@@ -60,8 +60,7 @@ public class SearchSolutionService extends Service {
         //create a thread to run the functionality
         if(isThread==false )
         {
-
-            if(myThread==null) {
+            if(myThread==null) {//if the user pressed solve twice
                 isSearchExists=true;
                 //creating the notification chanel
                 NotificationChannel serviceChanel = new NotificationChannel(
@@ -69,8 +68,10 @@ public class SearchSolutionService extends Service {
                         "Search Solution Serivce",
                         NotificationManager.IMPORTANCE_DEFAULT
                 );
+                //register the chanel into the manager
                 NotificationManager manager = getSystemService(NotificationManager.class);
                 manager.createNotificationChannel(serviceChanel);
+
                 mBoard = (Board) intent.getSerializableExtra(BOARD_KEY);
                 notification = new Notification.Builder(this,CHANNEL_ID)
                         .setContentTitle("Searching Solution")
