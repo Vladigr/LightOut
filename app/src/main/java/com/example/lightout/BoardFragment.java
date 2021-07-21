@@ -42,7 +42,7 @@ public class BoardFragment extends Fragment implements Observer {
 
     public interface BoardListener {
         void won();
-
+        boolean isMenuNeeded();
         void boardFragOnPause(Board board);
     }
 
@@ -185,8 +185,10 @@ public class BoardFragment extends Fragment implements Observer {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        getActivity().getMenuInflater().inflate(R.menu.board_game_menu, menu);
+        if (listener.isMenuNeeded() == true) {
+            super.onCreateOptionsMenu(menu, inflater);
+            getActivity().getMenuInflater().inflate(R.menu.board_game_menu, menu);
+        }
     }
 
     @Override
@@ -199,11 +201,16 @@ public class BoardFragment extends Fragment implements Observer {
                 for (Board.SolPoints sp : solPoints) {
                     btnArr[sp.getiScreen()][sp.getjScreen()].setBackgroundResource(R.drawable.solve);
                 }*/
+                if(SearchSolutionService.isSearchExists==false)
+                {
+                    gameInterface.endOnSolve();
+                    flgSolvedPressed=true;
+                    startMySerivice();
+                }
+                else
+                    Toast.makeText(getContext(),"Wait for the other to finish",Toast.LENGTH_LONG).show();
 
-                gameInterface.endOnSolve();
-                flgSolvedPressed=true;
 
-                startMySerivice();
                 //Toast.makeText(getActivity(), "press the green button from bottom right to bottom left and to the top",Toast.LENGTH_LONG).show();
                 break;
             //if the clicked button is Restart in the menu

@@ -110,7 +110,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
             //Toast.makeText(this, "result = "+result,Toast.LENGTH_LONG).show();
             ArrayList<Board.SolPoints> solPoints = ( ArrayList<Board.SolPoints>) getIntent().getSerializableExtra(SearchSolutionService.SOLUTION_KEY);
             board = (Board) getIntent().getSerializableExtra(SearchSolutionService.BOARD_KEY);
-
+            originalBoard= new Board(board);
             Fragment frag = BoardFragment.newInstance(board);
             FragmentTransaction tran = getSupportFragmentManager().beginTransaction();
             tran.replace(R.id.fragment_container_game_board, frag);
@@ -127,8 +127,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
 
     //build the action bar menu
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
+    public boolean onCreateOptionsMenu(Menu menu) { return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -295,8 +294,13 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         finish();
     }
 
+    @Override
+    public boolean isMenuNeeded() {
+        return isMainActivity;
+    }
 
     public interface StarGame{ //interface for starting the game via the main activity
         public void GAStartGame(SavedGame sg);
     }
+
 }

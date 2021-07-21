@@ -26,6 +26,7 @@ public class SearchSolutionService extends Service {
     public static final String MSG_KEY="msgKey";
     public static final String BOARD_KEY="boardKey";
     public static final int NOTIFICATION_ID = 1;
+    public static boolean isSearchExists=false;
 
     private Board mBoard=null;
 
@@ -61,6 +62,7 @@ public class SearchSolutionService extends Service {
         {
 
             if(myThread==null) {
+                isSearchExists=true;
                 //creating the notification chanel
                 NotificationChannel serviceChanel = new NotificationChannel(
                         SearchSolutionService.CHANNEL_ID,
@@ -111,7 +113,7 @@ public class SearchSolutionService extends Service {
         else
         {
             myThread=null;
-
+            isSearchExists=false;
             //add extars for the solution
 
             notificationIntent.putExtra(IS_BOARD_SOLVED,intent.getBooleanExtra(IS_BOARD_SOLVED,false));
