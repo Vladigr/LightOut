@@ -83,7 +83,7 @@ public class SearchSolutionService extends Service {
                         ArrayList<Board.SolPoints> solPoints = mBoard.solve();
                         //for showing that the thread runs
                         try {
-                            Thread.sleep(5000);
+                            Thread.sleep(2000);
                         } catch (InterruptedException e) {
                         }
 
