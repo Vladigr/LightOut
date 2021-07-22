@@ -18,7 +18,6 @@ public class Board extends Subject implements Serializable {
     public int getSize(){
         return size;
     }
-
     private int lightedNum;
 
     public Board(int size){
@@ -82,9 +81,13 @@ public class Board extends Subject implements Serializable {
         lightedNum = (int) Math.pow(size,2);
         Log.i("Board.Board", "lightedNum: "+lightedNum);
 
+        lightedNum =0;
         for(int i=0; i < state.length; ++i){
             for(int j=0; j < state.length; ++j){
                 state[i][j] = newBoard.state[i][j];
+                if(state[i][j] == true){
+                    ++lightedNum;
+                }
             }
         }
 
