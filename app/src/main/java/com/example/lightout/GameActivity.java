@@ -214,7 +214,6 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         //adding the filter action for the reciver
         IntentFilter filter = new IntentFilter("com.example.lightout.TICK");
         registerReceiver(myTimeReceive,filter);
-        myTimeReceive.setResume();
 
     }
 
@@ -291,6 +290,16 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
     public void endOnSolve()
     {
         Log.i("endOnSolve","GameActivity::endOnSolve");
+
+        //there is no call for pause therefore end the broadcast and the receiver
+        if (myTimeReceive != null) {
+            //if there is a broadcastRecevier unregister it
+            unregisterReceiver(myTimeReceive);
+            if (timer != null) {
+                //stop the timer thread
+                timer.cancel();
+            }
+        }
         (new CareTakerSave()).deleteSave(this,fileName);
         finish();
     }
