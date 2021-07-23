@@ -42,7 +42,9 @@ public class SearchSolutionService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        myThread.stop();
+        if(myThread!=null) {
+            myThread.stop();
+        }
     }
 
     //happens any time we start a service
@@ -60,7 +62,7 @@ public class SearchSolutionService extends Service {
         //create a thread to run the functionality
         if(isThread==false )
         {
-            if(myThread==null) {//if the user pressed solve twice
+            if(myThread==null) {
                 isSearchExists=true;
                 //creating the notification chanel
                 NotificationChannel serviceChanel = new NotificationChannel(

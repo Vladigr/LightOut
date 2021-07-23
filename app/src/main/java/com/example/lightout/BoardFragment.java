@@ -129,7 +129,7 @@ public class BoardFragment extends Fragment implements Observer {
     private void setButtonOnCreateView(int i, int j, TableRow tr) {
         btnArr[i][j] = new TableButton(getContext(), i, j, board.getElementInBoard(i, j));
         TableButton btn = btnArr[i][j];
-        //set Starting color
+        //set Starting color -> not in use
         int dpAsPixels = dpAsPixels(10);
         setColorForTableButton(i, j);
 

@@ -34,6 +34,7 @@ public class ChooseGameAdapter extends RecyclerView.Adapter<ChooseGameAdapter.Vi
         }
     }
 
+    //with the item count the recycleVIew knows how many viewHolder it need to create
     @Override
     public int getItemCount() {
         return fileNameArray.length;

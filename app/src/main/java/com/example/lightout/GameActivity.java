@@ -44,6 +44,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
     boolean timerStatus=false;
     boolean randomStatus=false;
     long secondsLeft=0;
+    long secondsLeftAfterPause=-1;
     private String fileName;
     private boolean flagRestart=false;
     private TextView txtTimeLeft;
@@ -80,6 +81,8 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
 
              fileName = (String) getIntent().getSerializableExtra(MainActivity.fileNameKey);
 
+
+            //kfilut
              board = (Board) getIntent().getSerializableExtra(BoardFragment.boardBundleKey);
              originalBoard= new Board(board);
              Log.i("lightout-GameActivity", "board size: " + board.getSize());
@@ -102,7 +105,7 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
             Log.i("newElro","going for solution, solution"+getIntent().getStringExtra(SearchSolutionService.MSG_KEY));
             //get solved board
             Toast.makeText(this, "press the green button from bottom right to bottom left and to the top",Toast.LENGTH_LONG).show();
-            String result=getIntent().getStringExtra(SearchSolutionService.MSG_KEY);
+            //String result=getIntent().getStringExtra(SearchSolutionService.MSG_KEY);
             //Toast.makeText(this, "result = "+result,Toast.LENGTH_LONG).show();
             ArrayList<Board.SolPoints> solPoints = ( ArrayList<Board.SolPoints>) getIntent().getSerializableExtra(SearchSolutionService.SOLUTION_KEY);
             board = (Board) getIntent().getSerializableExtra(SearchSolutionService.BOARD_KEY);
@@ -131,21 +134,23 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         super.onResume();
         Log.i("gameActivity","Game Resume");
         //if there is a broadcast set it to resume
-        if(myTimeReceive !=null)
+        if(myTimeReceive !=null && secondsLeftAfterPause!=-1)
         {
-            myTimeReceive.setResume();
+            startTimer(secondsLeftAfterPause);
         }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        /*
         Log.i("gameActivity","Game Pause");
         //if there is a broadcast pause the countdown
         if(myTimeReceive !=null && !isSolution)
         {
-            myTimeReceive.setPause();
+            unregisterReceiver(myTimeReceive);
         }
+         */
     }
 
     @Override
@@ -158,13 +163,13 @@ public class GameActivity extends AppCompatActivity implements TimerBroadcastRec
         if(flagRestart==false) {
             if (myTimeReceive != null) {
                 time = myTimeReceive.getSeconds();
-
+                secondsLeftAfterPause=time;
                 //if there is a broadcastRecevier unregister it
                 unregisterReceiver(myTimeReceive);
-            }
-            if (timer != null) {
-                //stop the timer thread
-                timer.cancel();
+                if (timer != null) {
+                    //stop the timer thread
+                    timer.cancel();
+                }
             }
 
             try {
